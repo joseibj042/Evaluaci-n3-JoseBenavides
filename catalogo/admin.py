@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Marca, Celular, Perfil
 
-# Register your models here.
+admin.site.register(Marca)
+admin.site.register(Celular)
+admin.site.register(Perfil)
