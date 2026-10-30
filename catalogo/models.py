@@ -64,8 +64,10 @@ class Celular(models.Model):
             and self.stock > 0
         )
 
+    @property
+    def precio_formateado(self):
+        return f"{self.precio:,}".replace(",", ".")
 
-# Modelo para información adicional del usuario
 class Perfil(models.Model):
 
     ROLES = [
