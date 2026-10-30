@@ -1,0 +1,88 @@
+
+{% extends 'base.html' %}
+
+{% block titulo %}
+{{ celular.nombre }} - CeluMarket
+{% endblock %}
+
+{% block contenido %}
+
+<a href="{% url 'catalogo:inicio' %}"
+   class="btn btn-outline-secondary mb-4">
+
+    Volver al catálogo
+
+</a>
+
+<div class="card shadow-sm">
+
+    <div class="row g-0">
+
+        <div class="col-md-5 p-4 text-center">
+
+            {% if celular.imagen %}
+
+            <img
+                src="{{ celular.imagen.url }}"
+                alt="{{ celular.nombre }}"
+                class="img-fluid"
+                style="max-height:350px;">
+
+            {% else %}
+
+            <div class="bg-light p-5 text-muted">
+                Sin imagen
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="col-md-7">
+
+            <div class="card-body">
+
+                <p class="text-muted">
+                    {{ celular.marca.nombre }}
+                </p>
+
+                <h1 class="h2">
+                    {{ celular.nombre }}
+                </h1>
+
+                <p>
+                    {{ celular.descripcion }}
+                </p>
+
+                <h2 class="text-primary">
+                    ${{ celular.precio }}
+                </h2>
+
+                <p>
+                    Código: {{ celular.codigo }}
+                </p>
+
+                {% if celular.disponible %}
+
+                <p class="text-success">
+                    Disponible
+                    ({{ celular.stock }} unidades)
+                </p>
+
+                {% else %}
+
+                <p class="text-danger">
+                    No disponible
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
