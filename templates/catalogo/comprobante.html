@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Comprobante - CeluMarket
+{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+
+    <div class="col-12 col-lg-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body p-4">
+
+                <h1 class="h3 text-success">
+                    Solicitud simulada completada
+                </h1>
+
+                <p class="text-muted">
+                    CeluMarket - Comprobante de prueba
+                </p>
+
+                <p>
+                    <strong>Fecha:</strong>
+                    {{ comprobante.fecha }}
+                </p>
+
+                <hr>
+
+                <h2 class="h5">Productos seleccionados</h2>
+
+                <div class="table-responsive">
+
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>Celular</th>
+                                <th>Cantidad</th>
+                                <th>Precio unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for producto in comprobante.productos %}
+
+                            <tr>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.cantidad }}</td>
+                                <td>${{ producto.precio }}</td>
+                                <td>${{ producto.importe }}</td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <span>Subtotal sin IVA</span>
+                    <span>${{ comprobante.subtotal }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-2">
+                    <span>IVA incluido (19%)</span>
+                    <span>${{ comprobante.iva }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <strong>Total final</strong>
+                    <strong>${{ comprobante.total }}</strong>
+                </div>
+
+                <div class="alert alert-warning mt-4">
+
+                    Este comprobante es una simulación.
+
+                </div>
+
+                <a href="{% url 'catalogo:inicio' %}"
+                   class="btn btn-primary">
+
+                    Volver al catálogo
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

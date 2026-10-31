@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block titulo %}
@@ -76,6 +75,40 @@
                 </p>
 
                 {% endif %}
+
+                {% if celular.disponible %}
+
+                <form method="POST"
+                action="{% url 'catalogo:agregar_carrito' celular.id %}"
+                class="mt-4">
+
+                {% csrf_token %}
+
+                <label for="cantidad" class="form-label">
+                    Cantidad
+                    </label>
+
+                    <input
+                    type="number"
+                    id="cantidad"
+                    name="cantidad"
+                    class="form-control mb-3"
+                    value="1"
+                    min="1"
+                    max="{{ celular.stock }}"
+                    style="max-width:150px;"
+                    required>
+
+                    <button type="submit"
+                    class="btn btn-success">
+                
+                    Agregar al carrito
+
+                    </button>
+                    
+                    </form>
+
+                    {% endif %}
 
             </div>
 

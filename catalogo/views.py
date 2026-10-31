@@ -5,6 +5,9 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.http import require_POST
+from django.utils import timezone
+from .carrito import resumen_carrito
 from .forms import CelularForm
 
 from .models import Celular, Marca
@@ -222,4 +225,201 @@ def desactivar_celular(request, codigo):
         request,
         'catalogo/confirmar_desactivacion.html',
         {'celular': celular}
+    )
+
+def ver_carrito(request):
+
+    resumen = resumen_carrito(request)
+
+    return render(
+        request,
+        'catalogo/carrito.html',
+        resumen
+    )
+
+@require_POST
+def agregar_carrito(request, celular_id):
+
+    celular = get_object_or_404(
+        Celular,
+        pk=celular_id,
+        activo=True
+    )
+
+    if not celular.disponible:
+        messages.error(
+            request,
+            'Este celular no está disponible.'
+        )
+        return redirect('catalogo:carrito')
+
+    try:
+        cantidad = int(request.POST.get('cantidad', 1))
+    except (ValueError, TypeError):
+        cantidad = 0
+
+    if cantidad < 1:
+        messages.error(request, 'Cantidad no válida.')
+        return redirect('catalogo:carrito')
+
+    carrito = request.session.get('carrito', {}).copy()
+
+    clave = str(celular.pk)
+
+    actual = int(carrito.get(clave, 0))
+    nueva_cantidad = actual + cantidad
+
+    if nueva_cantidad > celular.stock:
+        messages.error(
+            request,
+            'No hay suficiente stock para esa cantidad.'
+        )
+        return redirect('catalogo:carrito')
+
+    carrito[clave] = nueva_cantidad
+
+    request.session['carrito'] = carrito
+
+    messages.success(
+        request,
+        'Celular agregado al carrito.'
+    )
+
+    return redirect('catalogo:carrito')
+
+@require_POST
+def actualizar_carrito(request, celular_id):
+
+    celular = get_object_or_404(
+        Celular,
+        pk=celular_id
+    )
+
+    try:
+        cantidad = int(request.POST.get('cantidad', 1))
+    except (ValueError, TypeError):
+        cantidad = 0
+
+    if cantidad < 1:
+        messages.error(
+            request,
+            'La cantidad debe ser mayor que cero.'
+        )
+        return redirect('catalogo:carrito')
+
+    if not celular.disponible or cantidad > celular.stock:
+        messages.error(
+            request,
+            'La cantidad supera el stock disponible.'
+        )
+        return redirect('catalogo:carrito')
+
+    carrito = request.session.get('carrito', {}).copy()
+    clave = str(celular.pk)
+
+    if clave in carrito:
+        carrito[clave] = cantidad
+        request.session['carrito'] = carrito
+
+        messages.success(
+            request,
+            'Cantidad actualizada correctamente.'
+        )
+
+    return redirect('catalogo:carrito')
+
+@require_POST
+def eliminar_carrito(request, celular_id):
+
+    carrito = request.session.get('carrito', {}).copy()
+
+    carrito.pop(str(celular_id), None)
+
+    request.session['carrito'] = carrito
+
+    messages.success(
+        request,
+        'Celular eliminado del carrito.'
+    )
+
+    return redirect('catalogo:carrito')
+
+@require_POST
+def vaciar_carrito(request):
+
+    request.session['carrito'] = {}
+
+    messages.success(
+        request,
+        'Carrito vaciado correctamente.'
+    )
+
+    return redirect('catalogo:carrito')
+
+@require_POST
+def finalizar_carrito(request):
+
+    resumen = resumen_carrito(request)
+
+    if not resumen['items']:
+        messages.error(
+            request,
+            'Tu carrito está vacío.'
+        )
+        return redirect('catalogo:carrito')
+
+    if resumen['problemas']:
+        messages.error(
+            request,
+            'Revisa los productos antes de continuar.'
+        )
+        return redirect('catalogo:carrito')
+
+    comprobante = {
+        'fecha': timezone.localtime().strftime(
+            '%d/%m/%Y %H:%M'
+        ),
+        'productos': [],
+        'subtotal': resumen['subtotal_formateado'],
+        'iva': resumen['iva_formateado'],
+        'total': resumen['total_formateado'],
+    }
+
+    for item in resumen['items']:
+
+        comprobante['productos'].append({
+            'nombre': item['celular'].nombre,
+            'cantidad': item['cantidad'],
+            'precio': item['celular'].precio_formateado,
+            'importe': item['importe_formateado'],
+        })
+
+    request.session['ultimo_comprobante'] = comprobante
+
+    request.session['carrito'] = {}
+
+    messages.success(
+        request,
+        'Solicitud simulada generada correctamente.'
+    )
+
+    return redirect('catalogo:comprobante')
+
+def ver_comprobante(request):
+
+    comprobante = request.session.get(
+        'ultimo_comprobante'
+    )
+
+    if not comprobante:
+        messages.info(
+            request,
+            'Todavía no tienes un comprobante.'
+        )
+        return redirect('catalogo:carrito')
+
+    return render(
+        request,
+        'catalogo/comprobante.html',
+        {'comprobante': comprobante}
     )
