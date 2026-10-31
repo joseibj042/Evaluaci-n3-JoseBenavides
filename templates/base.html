@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -36,12 +35,41 @@
                    href="{% url 'admin:index' %}">
                     Administración
                 </a>
+                {% if user.is_authenticated and user.is_staff %}
+
+                <a class="text-white text-decoration-none"
+                href="{% url 'catalogo:gestion' %}">
+
+                Gestionar celulares
+
+                </a>
+
+                {% endif %}
             </div>
 
         </div>
     </nav>
 
     <main class="container py-4">
+
+        {% if messages %}
+
+        {% for message in messages %}
+
+        <div class="alert
+        {% if message.tags == 'error' %}
+        alert-danger
+        {% else %}
+        alert-{{ message.tags|default:'info' }}
+        {% endif %}">
+
+        {{ message }}
+
+        </div>
+
+    {% endfor %}
+
+    {% endif %}
 
         {% block contenido %}
         {% endblock %}

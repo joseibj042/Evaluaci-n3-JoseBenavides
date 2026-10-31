@@ -2,6 +2,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .forms import CelularForm
 
 from .models import Celular, Marca
 
@@ -81,5 +85,141 @@ def detalle_celular(request, codigo):
     return render(
         request,
         'catalogo/detalle.html',
+        {'celular': celular}
+    )
+
+def es_administrador(usuario):
+    return usuario.is_staff
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(
+    es_administrador,
+    login_url='catalogo:inicio',
+    redirect_field_name=None
+)
+def gestion_celulares(request):
+
+    celulares = Celular.objects.select_related(
+        'marca'
+    ).order_by('nombre')
+
+    return render(
+        request,
+        'catalogo/gestion.html',
+        {'celulares': celulares}
+    )
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(
+    es_administrador,
+    login_url='catalogo:inicio',
+    redirect_field_name=None
+)
+def crear_celular(request):
+
+    if request.method == 'POST':
+
+        form = CelularForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                'Celular agregado correctamente.'
+            )
+
+            return redirect('catalogo:gestion')
+
+    else:
+        form = CelularForm()
+
+    return render(
+        request,
+        'catalogo/formulario_celular.html',
+        {
+            'form': form,
+            'titulo': 'Agregar celular',
+            'boton': 'Guardar celular'
+        }
+    )
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(
+    es_administrador,
+    login_url='catalogo:inicio',
+    redirect_field_name=None
+)
+def editar_celular(request, codigo):
+
+    celular = get_object_or_404(
+        Celular,
+        codigo=codigo
+    )
+
+    if request.method == 'POST':
+
+        form = CelularForm(
+            request.POST,
+            request.FILES,
+            instance=celular
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                'Celular actualizado correctamente.'
+            )
+
+            return redirect('catalogo:gestion')
+
+    else:
+        form = CelularForm(instance=celular)
+
+    return render(
+        request,
+        'catalogo/formulario_celular.html',
+        {
+            'form': form,
+            'titulo': 'Editar celular',
+            'boton': 'Guardar cambios'
+        }
+    )
+
+@login_required(login_url='/admin/login/')
+@user_passes_test(
+    es_administrador,
+    login_url='catalogo:inicio',
+    redirect_field_name=None
+)
+def desactivar_celular(request, codigo):
+
+    celular = get_object_or_404(
+        Celular,
+        codigo=codigo
+    )
+
+    if request.method == 'POST':
+
+        celular.activo = False
+        celular.save(update_fields=['activo'])
+
+        messages.success(
+            request,
+            'Celular desactivado correctamente.'
+        )
+
+        return redirect('catalogo:gestion')
+
+    return render(
+        request,
+        'catalogo/confirmar_desactivacion.html',
         {'celular': celular}
     )

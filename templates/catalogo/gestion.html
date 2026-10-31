@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Gestion de celulares - CeluMarket
+{% endblock %}
+
+{% block contenido %}
+
+<div class="d-flex justify-content-between
+            align-items-center flex-wrap gap-2 mb-4">
+
+    <h1 class="h3">Gestión de celulares</h1>
+
+    <a href="{% url 'catalogo:crear' %}"
+       class="btn btn-primary">
+        + Agregar celular
+    </a>
+
+</div>
+
+<p class="text-muted">
+    Total registrados: {{ celulares|length }}
+</p>
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered
+                  align-middle">
+
+        <thead class="table-dark">
+
+            <tr>
+                <th>Celular</th>
+                <th>Marca</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for celular in celulares %}
+
+            <tr>
+
+                <td>{{ celular.nombre }}</td>
+
+                <td>{{ celular.marca.nombre }}</td>
+
+                <td>
+                    ${{ celular.precio_formateado }}
+                </td>
+
+                <td>{{ celular.stock }}</td>
+
+                <td>
+
+                    {% if not celular.activo %}
+
+                        <span class="badge bg-secondary">
+                            Desactivado
+                        </span>
+
+                    {% elif celular.disponible %}
+
+                        <span class="badge bg-success">
+                            Disponible
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-warning text-dark">
+                            No disponible
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <div class="d-flex gap-2 flex-wrap">
+
+                        <a
+                            href="{% url 'catalogo:editar' celular.codigo %}"
+                            class="btn btn-sm btn-outline-primary">
+
+                            Editar
+
+                        </a>
+
+                        {% if celular.activo %}
+
+                        <a
+                            href="{% url 'catalogo:desactivar' celular.codigo %}"
+                            class="btn btn-sm btn-outline-danger">
+
+                            Desactivar
+
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="6" class="text-center">
+                    No hay celulares registrados.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
