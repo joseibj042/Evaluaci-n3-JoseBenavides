@@ -56,6 +56,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'tienda.urls'
@@ -136,3 +139,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Página para iniciar sesión
+LOGIN_URL = 'catalogo:login'
+
+# Página después de iniciar sesión
+LOGIN_REDIRECT_URL = 'catalogo:perfil'
+
+# Página después de cerrar sesión
+LOGOUT_REDIRECT_URL = 'catalogo:inicio'

@@ -1,6 +1,7 @@
-
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
+from .forms import AccesoForm
 
 app_name = 'catalogo'
 
@@ -83,4 +84,40 @@ urlpatterns = [
         views.ver_comprobante,
         name='comprobante'
     ),
+
+    path(
+        'registro/',
+        views.registrar_usuario,
+        name='registro'
+    ),
+
+    path(
+        'iniciar-sesion/',
+        auth_views.LoginView.as_view(
+            template_name='catalogo/login.html',
+            authentication_form=AccesoForm
+        ),
+        name='login'
+    ),
+
+    path(
+        'cerrar-sesion/',
+        auth_views.LogoutView.as_view(
+            next_page='catalogo:inicio'
+        ),
+        name='logout'
+    ),
+
+    path(
+        'perfil/',
+        views.perfil_usuario,
+        name='perfil'
+    ),
+
+    path(
+        'perfil/editar/',
+        views.editar_perfil,
+        name='editar_perfil'
+    ),
+
 ]

@@ -1,4 +1,3 @@
-
 from .models import Celular
 
 def formato_pesos(valor):

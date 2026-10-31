@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -7,6 +6,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+
+from .models import Perfil
+from .forms import RegistroForm, PerfilForm
 from .carrito import resumen_carrito
 from .forms import CelularForm
 
@@ -94,7 +99,7 @@ def detalle_celular(request, codigo):
 def es_administrador(usuario):
     return usuario.is_staff
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='catalogo:login')
 @user_passes_test(
     es_administrador,
     login_url='catalogo:inicio',
@@ -422,4 +427,105 @@ def ver_comprobante(request):
         request,
         'catalogo/comprobante.html',
         {'comprobante': comprobante}
+    )
+
+def registrar_usuario(request):
+
+    if request.user.is_authenticated:
+        return redirect('catalogo:perfil')
+
+    if request.method == 'POST':
+
+        form = RegistroForm(request.POST)
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                usuario = form.save()
+
+                Perfil.objects.create(
+                    usuario=usuario,
+                    rut=form.cleaned_data['rut'],
+                    telefono=form.cleaned_data['telefono'],
+                    rol='cliente'
+                )
+
+            login(request, usuario)
+
+            messages.success(
+                request,
+                'Tu cuenta fue creada correctamente.'
+            )
+
+            return redirect('catalogo:perfil')
+
+    else:
+        form = RegistroForm()
+
+    return render(
+        request,
+        'catalogo/registro.html',
+        {'form': form}
+    )
+
+@login_required
+def perfil_usuario(request):
+
+    perfil, creado = Perfil.objects.get_or_create(
+        usuario=request.user,
+        defaults={
+            'rol': (
+                'administrador'
+                if request.user.is_staff
+                else 'cliente'
+            )
+        }
+    )
+
+    return render(
+        request,
+        'catalogo/perfil.html',
+        {'perfil': perfil}
+    )
+
+@login_required
+def editar_perfil(request):
+
+    perfil, creado = Perfil.objects.get_or_create(
+        usuario=request.user,
+        defaults={
+            'rol': (
+                'administrador'
+                if request.user.is_staff
+                else 'cliente'
+            )
+        }
+    )
+
+    if request.method == 'POST':
+
+        form = PerfilForm(
+            request.POST,
+            instance=perfil
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                'Perfil actualizado correctamente.'
+            )
+
+            return redirect('catalogo:perfil')
+
+    else:
+        form = PerfilForm(instance=perfil)
+
+    return render(
+        request,
+        'catalogo/editar_perfil.html',
+        {'form': form}
     )

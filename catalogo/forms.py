@@ -1,7 +1,11 @@
-
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import (
+    UserCreationForm,
+    AuthenticationForm
+)
+from .models import Perfil
 from django import forms
 from .models import Celular
-
 
 class CelularForm(forms.ModelForm):
 
@@ -117,3 +121,101 @@ class CelularForm(forms.ModelForm):
             )
 
         return stock
+
+class RegistroForm(UserCreationForm):
+
+    rut = forms.CharField(
+        max_length=15,
+        label='RUT'
+    )
+
+    telefono = forms.CharField(
+        max_length=20,
+        label='Teléfono'
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'rut',
+            'telefono',
+            'password1',
+            'password2',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for campo in self.fields.values():
+            campo.widget.attrs['class'] = 'form-control'
+
+    def clean_rut(self):
+
+        rut = self.cleaned_data['rut'].strip().upper()
+
+        if Perfil.objects.filter(rut__iexact=rut).exists():
+            raise forms.ValidationError(
+                'Este RUT ya está registrado.'
+            )
+
+        return rut
+
+class AccesoForm(AuthenticationForm):
+
+    username = forms.CharField(
+        label='Nombre de usuario',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
+    password = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
+class PerfilForm(forms.ModelForm):
+
+    class Meta:
+        model = Perfil
+
+        fields = [
+            'rut',
+            'telefono',
+        ]
+
+        labels = {
+            'rut': 'RUT',
+            'telefono': 'Teléfono',
+        }
+
+        widgets = {
+            'rut': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
+
+            'telefono': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
+        }
+
+    def clean_rut(self):
+
+        rut = self.cleaned_data['rut'].strip().upper()
+
+        if rut:
+            existe = Perfil.objects.filter(
+                rut__iexact=rut
+            ).exclude(
+                pk=self.instance.pk
+            ).exists()
+
+            if existe:
+                raise forms.ValidationError(
+                    'Este RUT pertenece a otra cuenta.'
+                )
+
+        return rut

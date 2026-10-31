@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Editar perfil - CeluMarket
+{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+
+    <div class="col-12 col-md-7 col-lg-6">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body p-4">
+
+                <h1 class="h3 mb-4">
+                    Editar mis datos
+                </h1>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    {% for campo in form %}
+
+                    <div class="mb-3">
+
+                        <label
+                            class="form-label"
+                            for="{{ campo.id_for_label }}">
+
+                            {{ campo.label }}
+
+                        </label>
+
+                        {{ campo }}
+
+                        {% for error in campo.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endfor %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Guardar cambios
+
+                    </button>
+
+                    <a
+                        href="{% url 'catalogo:perfil' %}"
+                        class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

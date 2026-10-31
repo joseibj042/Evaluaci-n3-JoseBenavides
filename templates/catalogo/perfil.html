@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Mi perfil - CeluMarket
+{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+
+    <div class="col-12 col-md-8 col-lg-6">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body p-4">
+
+                <h1 class="h3 mb-4">
+                    Mi perfil
+                </h1>
+
+                <div class="mb-3">
+
+                    <strong>Usuario</strong>
+
+                    <p class="text-muted">
+                        {{ user.username }}
+                    </p>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <strong>RUT</strong>
+
+                    <p class="text-muted">
+                        {{ perfil.rut|default:"No registrado" }}
+                    </p>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <strong>Teléfono</strong>
+
+                    <p class="text-muted">
+                        {{ perfil.telefono|default:"No registrado" }}
+                    </p>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <strong>Tipo de cuenta</strong>
+
+                    <p>
+                        {% if user.is_staff %}
+
+                        <span class="badge bg-primary">
+                            Administrador
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-secondary">
+                            Cliente
+                        </span>
+
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'catalogo:editar_perfil' %}"
+                    class="btn btn-primary">
+
+                    Editar mis datos
+
+                </a>
+
+                <a
+                    href="{% url 'catalogo:inicio' %}"
+                    class="btn btn-outline-secondary">
+
+                    Volver al catálogo
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
