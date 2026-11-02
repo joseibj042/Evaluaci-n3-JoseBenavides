@@ -1,0 +1,181 @@
+
+/* COLORES PRINCIPALES DE CELUMARKET */
+:root {
+    --principal: #142840;
+    --azul: #1769d1;
+    --fondo: #f2f5fa;
+    --texto: #1d2939;
+    --gris: #667085;
+}
+
+/* ESTILO GENERAL */
+body {
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+/* BARRA DE NAVEGACION */
+.site-navbar {
+    background-color: var(--principal);
+    box-shadow: 0 3px 14px rgba(0,0,0,0.12);
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.brand-icon {
+    background-color: var(--azul);
+    border-radius: 12px;
+    padding: 8px 11px;
+    margin-right: 8px;
+}
+
+.site-navbar .nav-link {
+    color: #e4eaf3;
+}
+
+.site-navbar .nav-link:hover {
+    color: #ffffff;
+}
+
+/* TARJETAS GENERALES */
+.card {
+    border: 1px solid #e5eaf1;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+}
+
+/* TARJETAS DE PRODUCTOS */
+.catalog-card {
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.catalog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+}
+
+.product-photo {
+    width: 100%;
+    height: 230px;
+    object-fit: contain;
+    background-color: white;
+}
+
+.photo-placeholder {
+    height: 230px;
+    background-color: #f5f6fa;
+}
+
+.catalog-card .card-title {
+    font-weight: 700;
+    min-height: 48px;
+}
+
+.catalog-card .card-text {
+    color: var(--gris);
+    font-size: 0.94rem;
+}
+
+.price-tag {
+    color: var(--azul);
+    font-weight: bold;
+    font-size: 1.35rem;
+}
+
+/* BOTONES */
+.btn {
+    border-radius: 9px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: var(--azul);
+    border-color: var(--azul);
+}
+
+.btn-primary:hover {
+    background-color: #1054ad;
+    border-color: #1054ad;
+}
+
+/* FORMULARIOS */
+.form-control,
+.form-select {
+    border-radius: 9px;
+    padding: 10px 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(23,105,209,0.12);
+}
+
+.filter-panel {
+    border: 1px solid #e0e7f0;
+}
+
+/* TITULOS */
+.page-title {
+    font-weight: 700;
+    color: var(--principal);
+}
+
+.page-description {
+    color: var(--gris);
+}
+
+/* DETALLE DEL PRODUCTO */
+.detail-image {
+    max-height: 380px;
+    width: 100%;
+    object-fit: contain;
+}
+
+/* TABLAS */
+.table {
+    vertical-align: middle;
+}
+
+.table thead {
+    --bs-table-bg: var(--principal);
+    --bs-table-color: #ffffff;
+}
+
+/* PIE DE PAGINA */
+.site-footer {
+    background-color: #ffffff;
+    color: var(--gris);
+    border-top: 1px solid #e5eaf1;
+    margin-top: 40px;
+}
+
+/* ADAPTACION A CELULARES */
+@media (max-width: 767px) {
+
+    .product-photo {
+        height: 200px;
+    }
+
+    .catalog-card .card-title {
+        min-height: auto;
+    }
+
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .site-navbar .navbar-nav {
+        padding-top: 12px;
+    }
+}

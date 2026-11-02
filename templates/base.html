@@ -1,152 +1,190 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
     <title>
-        {% block titulo %}CeluMarket{% endblock %}
+        {% block titulo %}Market{% endblock %}
     </title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{% static 'css/estilos.css' %}">
 </head>
 
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container d-flex flex-wrap gap-2">
+    <nav class="navbar navbar-expand-lg navbar-dark
+                site-navbar sticky-top">
 
-            <a class="navbar-brand fw-bold"
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center"
                href="{% url 'catalogo:inicio' %}">
-                CeluMarket
+
+                <span class="brand-icon">📱</span>
+                Market
+
             </a>
 
-            
-<div class="d-flex flex-wrap align-items-center gap-3">
-
-    <!-- Catalogo publico -->
-    <a
-        href="{% url 'catalogo:inicio' %}"
-        class="text-white text-decoration-none">
-
-        Catálogo
-
-    </a>
-
-    <a
-        href="{% url 'catalogo:carrito' %}"
-        class="text-white text-decoration-none">
-
-        Mi carrito ({{ cantidad_carrito }})
-
-    </a>
-
-    {% if user.is_authenticated %}
-
-        <a
-            href="{% url 'catalogo:perfil' %}"
-            class="text-white text-decoration-none">
-
-            Mi perfil
-
-        </a>
-
-        {% if user.is_staff %}
-
-        <a
-            href="{% url 'catalogo:gestion' %}"
-            class="text-white text-decoration-none">
-
-            Gestionar celulares
-
-        </a>
-
-        <a
-            href="{% url 'admin:index' %}"
-            class="text-white text-decoration-none">
-
-            Django Admin
-
-        </a>
-
-        {% endif %}
-
-        <form
-            method="POST"
-            action="{% url 'catalogo:logout' %}"
-            class="m-0">
-
-            {% csrf_token %}
-
             <button
-                type="submit"
-                class="btn btn-sm btn-outline-light">
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#menuPrincipal"
+                aria-controls="menuPrincipal"
+                aria-expanded="false"
+                aria-label="Abrir menú">
 
-                Cerrar sesión
+                <span class="navbar-toggler-icon"></span>
 
             </button>
 
-        </form>
+            <div class="collapse navbar-collapse"
+                 id="menuPrincipal">
 
-    {% else %}
+                <div class="navbar-nav ms-auto
+                            align-items-lg-center gap-lg-2">
 
-        <a
-            href="{% url 'catalogo:login' %}"
-            class="text-white text-decoration-none">
+                    <a class="nav-link"
+                       href="{% url 'catalogo:inicio' %}">
+                        Catálogo
+                    </a>
 
-            Iniciar sesión
+                    <a class="nav-link"
+                       href="{% url 'catalogo:carrito' %}">
 
-        </a>
+                        Mi carrito
 
-        <a
-            href="{% url 'catalogo:registro' %}"
-            class="btn btn-sm btn-outline-light">
+                        <span class="badge rounded-pill
+                                     text-bg-light">
 
-            Registrarse
+                            {{ cantidad_carrito|default:0 }}
 
-        </a>
+                        </span>
 
-    {% endif %}
+                    </a>
 
-</div>
+                    {% if user.is_authenticated %}
 
+                        <a class="nav-link"
+                           href="{% url 'catalogo:perfil' %}">
+                            Mi perfil
+                        </a>
+
+                        {% if user.is_staff %}
+
+                        <a class="nav-link"
+                           href="{% url 'catalogo:gestion' %}">
+                            Gestionar celulares
+                        </a>
+
+                        <a class="nav-link"
+                           href="{% url 'admin:index' %}">
+                            Django Admin
+                        </a>
+
+                        {% endif %}
+
+                        <form method="POST"
+                              action="{% url 'catalogo:logout' %}"
+                              class="m-0 mt-2 mt-lg-0">
+
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="btn btn-sm
+                                           btn-outline-light">
+
+                                Cerrar sesión
+
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <a class="nav-link"
+                           href="{% url 'catalogo:login' %}">
+                            Iniciar sesión
+                        </a>
+
+                        <a class="btn btn-sm btn-light
+                                  mt-2 mt-lg-0"
+                           href="{% url 'catalogo:registro' %}">
+                            Crear cuenta
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
 
         </div>
+
     </nav>
 
-    <main class="container py-4">
+    <main class="container py-4 py-lg-5">
 
         {% if messages %}
 
-        {% for message in messages %}
+            {% for message in messages %}
 
-        <div class="alert
-        {% if message.tags == 'error' %}
-        alert-danger
-        {% else %}
-        alert-{{ message.tags|default:'info' }}
-        {% endif %}">
+            <div class="alert
+                {% if message.tags == 'error' %}
+                    alert-danger
+                {% else %}
+                    alert-{{ message.tags|default:'info' }}
+                {% endif %}
+                alert-dismissible fade show"
+                role="alert">
 
-        {{ message }}
+                {{ message }}
 
-        </div>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Cerrar">
+                </button>
 
-    {% endfor %}
+            </div>
 
-    {% endif %}
+            {% endfor %}
+
+        {% endif %}
 
         {% block contenido %}
         {% endblock %}
 
     </main>
 
-    <footer class="text-center text-muted py-4">
-        <p>José Benavide - Tienda de celulares</p>
+    <footer class="site-footer py-4">
+
+        <div class="container text-center">
+
+            <strong>Market</strong>
+
+            <p class="small mb-0 mt-1">
+                Proyecto académico de Programación Back End
+            </p>
+
+        </div>
+
     </footer>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
 
 </body>
 </html>

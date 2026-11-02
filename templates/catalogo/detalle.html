@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block titulo %}
-{{ celular.nombre }} - CeluMarket
+{{ celular.nombre }}
 {% endblock %}
 
 {% block contenido %}
@@ -13,7 +13,7 @@
 
 </a>
 
-<div class="card shadow-sm">
+<div class="card border-0 shadow-sm p-2 p-lg-3">
 
     <div class="row g-0">
 
@@ -24,8 +24,7 @@
             <img
                 src="{{ celular.imagen.url }}"
                 alt="{{ celular.nombre }}"
-                class="img-fluid"
-                style="max-height:350px;">
+                class="img-fluid detail-image">
 
             {% else %}
 
@@ -53,7 +52,7 @@
                     {{ celular.descripcion }}
                 </p>
 
-                <h2 class="text-primary">
+                <h2 class="price-tag my-3">
                     ${{ celular.precio_formateado }}
                     </h2>
 

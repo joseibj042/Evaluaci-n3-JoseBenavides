@@ -2,18 +2,32 @@
 {% extends 'base.html' %}
 
 {% block titulo %}
-Catalogo - CeluMarket
+Catalogo
 {% endblock %}
 
 {% block contenido %}
 
-<h1 class="mb-2">Nuestros celulares</h1>
 
-<p class="text-muted mb-4">
-    Encuentra el celular que necesitas.
-</p>
+<div class="mb-4">
 
-<form method="GET" class="card p-3 mb-4">
+    <p class="text-primary fw-semibold
+              text-uppercase small mb-2">
+        Tu tienda de tecnología
+    </p>
+
+    <h1 class="page-title mb-2">
+        Encuentra tu próximo celular
+    </h1>
+
+    <p class="page-description mb-0">
+        Explora nuestras marcas y compara
+        los modelos disponibles.
+    </p>
+
+</div>
+
+<form method="GET"
+      class="card filter-panel p-4 mb-4">
 
     <div class="row g-3">
 
@@ -123,15 +137,14 @@ Catalogo - CeluMarket
 
     <div class="col-12 col-sm-6 col-lg-4">
 
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 catalog-card">
 
             {% if celular.imagen %}
 
             <img
-                src="{{ celular.imagen.url }}"
-                class="card-img-top p-3"
-                alt="{{ celular.nombre }}"
-                style="height:220px; object-fit:contain;">
+            src="{{ celular.imagen.url }}"
+            class="card-img-top p-3 product-photo"
+            alt="{{ celular.nombre }}">
 
             {% else %}
 
@@ -162,7 +175,7 @@ Catalogo - CeluMarket
                     {{ celular.descripcion|truncatechars:100 }}
                 </p>
 
-                <h3 class="h5 text-primary">
+                <h3 class="price-tag">
                     ${{ celular.precio_formateado }}
                     </h3>
 
