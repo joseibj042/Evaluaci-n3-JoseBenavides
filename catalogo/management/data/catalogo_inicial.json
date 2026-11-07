@@ -1,0 +1,360 @@
+{
+  "marcas": [
+    {
+      "nombre": "Samsung",
+      "descripcion": "Celulares Samsung"
+    },
+    {
+      "nombre": "Apple",
+      "descripcion": "Celulares iPhone"
+    },
+    {
+      "nombre": "Xiaomi",
+      "descripcion": "Celulares Xiaomi"
+    },
+    {
+      "nombre": "Motorola",
+      "descripcion": "Celulares Motorola"
+    },
+    {
+      "nombre": "Google",
+      "descripcion": ""
+    },
+    {
+      "nombre": "ASUS",
+      "descripcion": ""
+    }
+  ],
+  "celulares": [
+    {
+      "codigo": "samsung-a17",
+      "nombre": "Samsung Galaxy A17",
+      "descripcion": "Descubre la combinación perfecta de diseño, rendimiento y tecnología con el Samsung Galaxy A17. Cuenta con una impresionante pantalla Super AMOLED de 6,7” a 90 Hz, procesador de ocho núcleos y un avanzado sistema de triple cámara con sensor principal de 50 MP y estabilización óptica. Su potente batería de 5000 mAh con carga rápida de 25 W, almacenamiento ampliable y funciones inteligentes de Google Gemini lo convierten en una excelente opción para disfrutar de fotografías, redes sociales, videojuegos y entretenimiento diario.",
+      "precio": 269990,
+      "stock": 17,
+      "estado": "disponible",
+      "imagen": "celulares/a17.avif",
+      "activo": true,
+      "marca": "Samsung"
+    },
+    {
+      "codigo": "samsung-s26-ultra",
+      "nombre": "Samsung Galaxy S26 Ultra",
+      "descripcion": "Descubre la máxima innovación, potencia y tecnología con el Samsung Galaxy S26 Ultra. Cuenta con una espectacular pantalla Dynamic AMOLED 2X de 6,9” a 120 Hz, potente procesador Snapdragon 8 Elite Gen 5 for Galaxy, hasta 16 GB de RAM y un avanzado sistema de cuatro cámaras con sensor principal de 200 MP y zoom óptico de 5 aumentos. Su batería de 5000 mAh con carga rápida de 60 W, lápiz S Pen integrado, pantalla de privacidad y funciones avanzadas de Galaxy AI lo convierten en una excelente opción para disfrutar de fotografía profesional, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 999990,
+      "stock": 8,
+      "estado": "disponible",
+      "imagen": "celulares/26_ultra.png",
+      "activo": true,
+      "marca": "Samsung"
+    },
+    {
+      "codigo": "iphone-13",
+      "nombre": "iPhone 13",
+      "descripcion": "Descubre la combinación perfecta de elegancia, potencia e innovación con el Apple iPhone 13. Cuenta con una impresionante pantalla Super Retina XDR OLED de 6,1”, potente procesador A15 Bionic y un avanzado sistema de doble cámara de 12 MP con estabilización óptica y modo Cine. Su batería de larga duración, tecnología Face ID, resistencia al agua IP68 y conectividad 5G lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con gran fluidez y rendimiento.",
+      "precio": 370990,
+      "stock": 8,
+      "estado": "disponible",
+      "imagen": "celulares/i13.png",
+      "activo": true,
+      "marca": "Apple"
+    },
+    {
+      "codigo": "iphone-15",
+      "nombre": "iPhone 15",
+      "descripcion": "Descubre la combinación perfecta de elegancia, potencia e innovación con el Apple iPhone 15. Cuenta con una impresionante pantalla Super Retina XDR OLED de 6,1”, potente procesador A16 Bionic y un avanzado sistema de doble cámara con sensor principal de 48 MP y zoom óptico de 2 aumentos. Su tecnología Dynamic Island, conexión USB-C, reconocimiento facial Face ID, resistencia al agua IP68 y conectividad 5G lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 719990,
+      "stock": 15,
+      "estado": "disponible",
+      "imagen": "celulares/15.png",
+      "activo": true,
+      "marca": "Apple"
+    },
+    {
+      "codigo": "xiaomi-15t-pro",
+      "nombre": "Xiaomi 15T Pro",
+      "descripcion": "Descubre una experiencia premium de potencia, fotografía y tecnología con el Xiaomi 15T Pro 5G. Cuenta con una impresionante pantalla AMOLED de 6,83” a 144 Hz, potente procesador MediaTek Dimensity 9400+, cámara principal Leica de 50 MP con estabilización óptica y teleobjetivo con zoom óptico de 5 aumentos. Su batería de 5500 mAh con carga rápida de 90 W y carga inalámbrica de 50 W lo convierten en una excelente opción para disfrutar de juegos, fotografías y entretenimiento con el máximo rendimiento.",
+      "precio": 599990,
+      "stock": 15,
+      "estado": "disponible",
+      "imagen": "celulares/Xiaomi15TPro_Moca_1_1170x1500.png",
+      "activo": true,
+      "marca": "Xiaomi"
+    },
+    {
+      "codigo": "Redmi-note-17-pro-max",
+      "nombre": "Redmi Note 17 Pro Max",
+      "descripcion": "Descubre una experiencia increíble de potencia, autonomía y tecnología con el Redmi Note 17 Pro Max 5G. Cuenta con una espectacular pantalla AMOLED de 6,83” a 120 Hz, procesador Snapdragon 6 Gen 5, cámara principal de 50 MP con estabilización óptica y una impresionante batería de 9210 mAh con carga rápida de 100 W. Su diseño elegante, resistencia al agua IP68 y conectividad 5G lo convierten en una excelente opción para disfrutar de juegos, fotografías y entretenimiento sin preocupaciones.",
+      "precio": 499990,
+      "stock": 7,
+      "estado": "disponible",
+      "imagen": "celulares/Render_promocional_del_Redmi_Note_17_Pro_Max.png",
+      "activo": true,
+      "marca": "Xiaomi"
+    },
+    {
+      "codigo": "moto-signature",
+      "nombre": "Motorola Signature",
+      "descripcion": "Descubre la combinación perfecta de lujo, innovación y potencia con el Motorola Signature. Cuenta con una espectacular pantalla AMOLED de 6,8” a 165 Hz, procesador Snapdragon 8 Gen 5, 16 GB de RAM y un avanzado sistema de cámaras de 50 MP. Su batería de 5200 mAh con carga rápida de 90 W y su elegante diseño ultradelgado ofrecen una experiencia premium para los más exigentes.",
+      "precio": 999990,
+      "stock": 12,
+      "estado": "disponible",
+      "imagen": "celulares/169189-1200-auto.png",
+      "activo": true,
+      "marca": "Motorola"
+    },
+    {
+      "codigo": "motorola-edge-70-fusion",
+      "nombre": "Motorola Edge 70 Fusion",
+      "descripcion": "Descubre el equilibrio perfecto entre diseño, potencia y tecnología. El Motorola Edge 70 Fusion cuenta con una impresionante pantalla AMOLED de 6,78” a 144 Hz, cámara principal de 50 MP, procesador Snapdragon 7s Gen 3 y batería de 5200 mAh con carga rápida de 68 W. Ideal para disfrutar de tus juegos, fotografías y aplicaciones favoritas con fluidez y estilo.",
+      "precio": 444990,
+      "stock": 15,
+      "estado": "disponible",
+      "imagen": "celulares/Smartphone_Motorola_F1_en_verde_esmeralda.png",
+      "activo": true,
+      "marca": "Motorola"
+    },
+    {
+      "codigo": "motorola-g67",
+      "nombre": "Motorola G67",
+      "descripcion": "Disfruta de una experiencia fluida y moderna con el Motorola Moto G67 5G. Cuenta con una impresionante pantalla Extreme AMOLED de 6,8” a 120 Hz, procesador MediaTek Dimensity 6300, cámara principal Sony de 50 MP y batería de 5200 mAh con carga rápida de 30 W. Su diseño elegante, sonido Dolby Atmos y conectividad 5G lo convierten en una excelente opción para el entretenimiento y el uso diario.",
+      "precio": 279990,
+      "stock": 20,
+      "estado": "disponible",
+      "imagen": "celulares/g67.png",
+      "activo": true,
+      "marca": "Motorola"
+    },
+    {
+      "codigo": "motorola-edge-50-fusion",
+      "nombre": "Motorola Edge 50 Fusion",
+      "descripcion": "Descubre la combinación perfecta de estilo, rendimiento y tecnología con el Motorola Edge 50 Fusion. Cuenta con una impresionante pantalla curva pOLED de 6,7” a 120 Hz, procesador Snapdragon 6 Gen 1, cámara principal Sony de 50 MP con estabilización óptica y batería de 5000 mAh con carga rápida de 68 W. Su diseño elegante, resistencia al agua IP68 y conectividad 5G lo convierten en una excelente opción para disfrutar de tus aplicaciones, fotografías y entretenimiento favorito.",
+      "precio": 329990,
+      "stock": 5,
+      "estado": "disponible",
+      "imagen": "celulares/Motorola_Edge_50_Fusion_Rosa.png",
+      "activo": true,
+      "marca": "Motorola"
+    },
+    {
+      "codigo": "motorola-g60",
+      "nombre": "Motorola G60",
+      "descripcion": "Disfruta de potencia, calidad y autonomía con el Motorola Moto G60. Cuenta con una amplia pantalla Full HD+ de 6,8” a 120 Hz, procesador Snapdragon 732G, cámara principal de 108 MP y cámara frontal de 32 MP. Su potente batería de 6000 mAh con carga rápida de 20 W y almacenamiento de 128 GB lo convierten en una excelente opción para disfrutar de tus juegos, fotografías y entretenimiento diario.",
+      "precio": 299990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/Smartphone_Motorola_de_doble_vista.png",
+      "activo": true,
+      "marca": "Motorola"
+    },
+    {
+      "codigo": "poco-c81-pro",
+      "nombre": "POCO C81 Pro",
+      "descripcion": "Descubre la combinación perfecta de estilo, rendimiento y autonomía con el Xiaomi POCO C81 Pro. Cuenta con una amplia pantalla LCD de 6,9” a 120 Hz, procesador UNISOC T7250 de ocho núcleos, cámara principal de 13 MP y una potente batería de 6000 mAh con carga rápida de 15 W. Su diseño moderno, almacenamiento ampliable y sistema Xiaomi HyperOS 3 lo convierten en una excelente opción para disfrutar de tus aplicaciones, redes sociales y entretenimiento diario.",
+      "precio": 99990,
+      "stock": 30,
+      "estado": "disponible",
+      "imagen": "celulares/POCO_C81_Pro__Vista_frontal_y_trasera.png",
+      "activo": true,
+      "marca": "Xiaomi"
+    },
+    {
+      "codigo": "poco-f9-ultra",
+      "nombre": "POCO F9 Ultra",
+      "descripcion": "Descubre el máximo rendimiento y tecnología con el Xiaomi POCO F9 Ultra 5G. Cuenta con una espectacular pantalla AMOLED de 6,9” a 185 Hz, potente procesador Snapdragon 8 Elite Gen 5, cámara principal de 200 MP con estabilización óptica y una impresionante batería de 8050 mAh con carga rápida de 100 W e inalámbrica de 50 W. Su avanzado sistema de sonido Bose y su increíble potencia lo convierten en una opción ideal para disfrutar de videojuegos, fotografía y entretenimiento al máximo.",
+      "precio": 999990,
+      "stock": 15,
+      "estado": "disponible",
+      "imagen": "celulares/Render_promocional_de_smartphone_POCO_maroon_inOKpX8.png",
+      "activo": true,
+      "marca": "Xiaomi"
+    },
+    {
+      "codigo": "Redmi-note-8",
+      "nombre": "Redmi Note 8",
+      "descripcion": "Disfruta de un excelente equilibrio entre rendimiento, fotografía y autonomía con el Xiaomi Redmi Note 8. Cuenta con una amplia pantalla Full HD+ de 6,3”, procesador Snapdragon 665, cámara principal de 48 MP con sistema de cuatro cámaras y cámara frontal de 13 MP. Su batería de 4000 mAh con carga rápida de 18 W, diseño elegante y almacenamiento ampliable lo convierten en una excelente opción para disfrutar de tus aplicaciones, fotografías y entretenimiento diario.",
+      "precio": 154990,
+      "stock": 5,
+      "estado": "disponible",
+      "imagen": "celulares/Smartphone_Redmi_azul_brillante_en_vista_doble.png",
+      "activo": true,
+      "marca": "Xiaomi"
+    },
+    {
+      "codigo": "rog-6",
+      "nombre": "ROG Phone 6",
+      "descripcion": "Lleva tu experiencia gaming al siguiente nivel con el ASUS ROG Phone 6. Cuenta con una impresionante pantalla AMOLED de 6,78” a 165 Hz, potente procesador Snapdragon 8+ Gen 1, hasta 16 GB de RAM y cámara principal Sony de 50 MP. Su enorme batería de 6000 mAh con carga rápida de 65 W, sistema de refrigeración GameCool 6 y controles AirTrigger 6 lo convierten en una excelente opción para disfrutar de videojuegos exigentes con máxima fluidez y rendimiento.",
+      "precio": 540000,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/Teléfono_ROG_futurista_en_blanco_y_negro.png",
+      "activo": true,
+      "marca": "ASUS"
+    },
+    {
+      "codigo": "rog-9",
+      "nombre": "ROG Phone 9",
+      "descripcion": "Lleva tu experiencia gaming al máximo nivel con el ASUS ROG Phone 9. Cuenta con una espectacular pantalla AMOLED de 6,78” de hasta 185 Hz, potente procesador Snapdragon 8 Elite, 12 GB de RAM y cámara principal Sony de 50 MP con estabilización avanzada. Su enorme batería de 5800 mAh con carga rápida de 65 W, sistema de refrigeración GameCool 9 y controles AirTrigger lo convierten en una excelente opción para disfrutar de videojuegos exigentes con potencia, fluidez y rendimiento profesional.",
+      "precio": 1729990,
+      "stock": 7,
+      "estado": "disponible",
+      "imagen": "celulares/Render_promocional_del_ROG_Phone_9_Pro.png",
+      "activo": true,
+      "marca": "ASUS"
+    },
+    {
+      "codigo": "rog-7",
+      "nombre": "ROG Phone 7",
+      "descripcion": "Lleva tu experiencia gaming al siguiente nivel con el ASUS ROG Phone 7. Cuenta con una impresionante pantalla AMOLED de 6,78” a 165 Hz, potente procesador Snapdragon 8 Gen 2, hasta 16 GB de RAM y cámara principal de 50 MP. Su enorme batería de 6000 mAh con carga rápida de 65 W, avanzado sistema de refrigeración GameCool 7 y controles AirTrigger lo convierten en una excelente opción para disfrutar de videojuegos exigentes con máxima potencia, fluidez y rendimiento.",
+      "precio": 920990,
+      "stock": 14,
+      "estado": "disponible",
+      "imagen": "celulares/ASUS_ROG_Phone_7__poder_gaming_futurista.png",
+      "activo": true,
+      "marca": "ASUS"
+    },
+    {
+      "codigo": "zenfone-12-ultra",
+      "nombre": "Zenfone 12 Ultra",
+      "descripcion": "Descubre la combinación perfecta de elegancia, potencia e innovación con el ASUS Zenfone 12 Ultra. Cuenta con una espectacular pantalla AMOLED de 6,78” de hasta 144 Hz, potente procesador Snapdragon 8 Elite, hasta 16 GB de RAM y cámara principal Sony de 50 MP con estabilización avanzada. Su batería de 5500 mAh con carga rápida de 65 W, carga inalámbrica de 15 W y funciones de inteligencia artificial lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 899990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/ASUS_Zenfone_12_Ultra_en_verde_menta.png",
+      "activo": true,
+      "marca": "ASUS"
+    },
+    {
+      "codigo": "zenfone-8-flip",
+      "nombre": "Zenfone 8 Flip",
+      "descripcion": "Descubre una experiencia única de fotografía, potencia e innovación con el ASUS Zenfone 8 Flip. Cuenta con una impresionante pantalla AMOLED de 6,67” a 90 Hz, potente procesador Snapdragon 888 5G, 8 GB de RAM y un revolucionario sistema de triple cámara giratoria de 64 MP que permite capturar selfies de máxima calidad. Su batería de 5000 mAh con carga rápida de 30 W, diseño elegante y pantalla sin interrupciones lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con gran rendimiento.",
+      "precio": 400990,
+      "stock": 17,
+      "estado": "disponible",
+      "imagen": "celulares/dlcdnwebimgs.asus.png",
+      "activo": true,
+      "marca": "ASUS"
+    },
+    {
+      "codigo": "google-pixel-11-pro",
+      "nombre": "Google Pixel 11 PRO",
+      "descripcion": "Descubre la combinación perfecta de inteligencia artificial, fotografía y potencia con el Google Pixel 11 Pro. Cuenta con una espectacular pantalla OLED LTPO de 6,3” a 120 Hz, potente procesador Google Tensor G6, hasta 16 GB de RAM y un avanzado sistema de triple cámara de 50 MP, 48 MP y 48 MP con zoom óptico de 5 aumentos. Su batería de 4850 mAh, carga inalámbrica de 25 W y funciones inteligentes de Google Gemini lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 1439990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/pixel_11.png",
+      "activo": true,
+      "marca": "Google"
+    },
+    {
+      "codigo": "google-pixel-10-a",
+      "nombre": "Google Pixel 10a",
+      "descripcion": "Descubre la combinación perfecta de inteligencia artificial, fotografía y rendimiento con el Google Pixel 10a. Cuenta con una espectacular pantalla pOLED de 6,3” a 120 Hz, potente procesador Google Tensor G4, 8 GB de RAM y un avanzado sistema de cámaras de 48 MP y 13 MP con funciones inteligentes de Google Gemini. Su batería de 5100 mAh con carga rápida e inalámbrica, resistencia al agua IP68 y 7 años de actualizaciones lo convierten en una excelente opción para disfrutar de fotografías, aplicaciones y entretenimiento diario.",
+      "precio": 704990,
+      "stock": 17,
+      "estado": "disponible",
+      "imagen": "celulares/pixel_10a.png",
+      "activo": true,
+      "marca": "Google"
+    },
+    {
+      "codigo": "google-pixel-7-pro",
+      "nombre": "Google Pixel 7 Pro",
+      "descripcion": "Descubre la combinación perfecta de fotografía, potencia e innovación con el Google Pixel 7 Pro. Cuenta con una impresionante pantalla LTPO OLED de 6,7” a 120 Hz, procesador Google Tensor G2, 12 GB de RAM y un avanzado sistema de triple cámara de 50 MP, 48 MP y 12 MP con zoom óptico de 5 aumentos. Su batería de 5000 mAh con carga rápida e inalámbrica, resistencia al agua IP68 y funciones inteligentes de Google lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con gran rendimiento.",
+      "precio": 429990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/pixel_7_pro.png",
+      "activo": true,
+      "marca": "Google"
+    },
+    {
+      "codigo": "google-pixel-8-pro",
+      "nombre": "Google Pixel 8 Pro",
+      "descripcion": "Descubre la combinación perfecta de inteligencia artificial, fotografía y potencia con el Google Pixel 8 Pro. Cuenta con una impresionante pantalla Super Actua LTPO OLED de 6,7” a 120 Hz, potente procesador Google Tensor G3, 12 GB de RAM y un avanzado sistema de triple cámara de 50 MP, 48 MP y 48 MP con zoom óptico de 5 aumentos. Su batería de 5050 mAh con carga rápida e inalámbrica, resistencia al agua IP68 y funciones inteligentes de Google lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 623990,
+      "stock": 8,
+      "estado": "disponible",
+      "imagen": "celulares/pixel_8_pro.png",
+      "activo": true,
+      "marca": "Google"
+    },
+    {
+      "codigo": "google-pixel-8",
+      "nombre": "Google Pixel 8",
+      "descripcion": "Descubre la combinación perfecta de inteligencia artificial, fotografía y rendimiento con el Google Pixel 8. Cuenta con una impresionante pantalla Actua OLED de 6,2” a 120 Hz, potente procesador Google Tensor G3, 8 GB de RAM y un avanzado sistema de doble cámara de 50 MP y 12 MP. Su batería de 4575 mAh con carga rápida e inalámbrica, resistencia al agua IP68 y funciones inteligentes de Google lo convierten en una excelente opción para disfrutar de fotografías, aplicaciones y entretenimiento con gran fluidez.",
+      "precio": 489990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/pixel_8.png",
+      "activo": true,
+      "marca": "Google"
+    },
+    {
+      "codigo": "iphone-10",
+      "nombre": "Iphone 10",
+      "descripcion": "Descubre la combinación perfecta de elegancia, innovación y rendimiento con el Apple iPhone X. Cuenta con una impresionante pantalla Super Retina OLED de 5,8”, potente procesador A11 Bionic, 3 GB de RAM y un avanzado sistema de doble cámara de 12 MP con estabilización óptica y zoom óptico de 2 aumentos. Su tecnología Face ID, carga inalámbrica y elegante diseño de vidrio y acero inoxidable lo convierten en una excelente opción para disfrutar de fotografías, aplicaciones y entretenimiento diario.",
+      "precio": 313990,
+      "stock": 5,
+      "estado": "disponible",
+      "imagen": "celulares/i10.png",
+      "activo": true,
+      "marca": "Apple"
+    },
+    {
+      "codigo": "iphone-17-pro-max",
+      "nombre": "Iphone 17 Pro Max",
+      "descripcion": "Descubre la máxima innovación, potencia y elegancia con el Apple iPhone 17 Pro Max. Cuenta con una espectacular pantalla Super Retina XDR OLED de 6,9” a 120 Hz, potente procesador A19 Pro y un avanzado sistema de triple cámara de 48 MP con zoom de calidad óptica de hasta 8 aumentos. Su batería de larga duración con hasta 39 horas de reproducción de video, tecnología Dynamic Island, Face ID, resistencia al agua IP68 y funciones de Apple Intelligence lo convierten en una excelente opción para disfrutar de fotografías profesionales, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 1369990,
+      "stock": 5,
+      "estado": "disponible",
+      "imagen": "celulares/i17.png",
+      "activo": true,
+      "marca": "Apple"
+    },
+    {
+      "codigo": "iphone-18-pro-max",
+      "nombre": "Iphone 18 Pro Max",
+      "descripcion": "Descubre la máxima innovación, potencia y elegancia con el Apple iPhone 18 Pro Max. Cuenta con una espectacular pantalla Super Retina XDR OLED de 6,9” a 120 Hz, potente procesador A20 Pro y un avanzado sistema de triple cámara de 48 MP con apertura variable y zoom de calidad óptica de hasta 8 aumentos. Su batería de larga duración con hasta 43 horas de reproducción de video, tecnología Dynamic Island, Face ID, resistencia al agua IP68 y funciones avanzadas de Apple Intelligence y Siri AI lo convierten en una excelente opción para disfrutar de fotografía profesional, videojuegos y entretenimiento con un rendimiento excepcional.",
+      "precio": 1699990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/i18.png",
+      "activo": true,
+      "marca": "Apple"
+    },
+    {
+      "codigo": "samsung-a57",
+      "nombre": "Samsung Galaxy A57",
+      "descripcion": "Descubre la combinación perfecta de elegancia, potencia e innovación con el Samsung Galaxy A57 5G. Cuenta con una impresionante pantalla Super AMOLED Plus de 6,7” a 120 Hz, potente procesador de ocho núcleos, 8 GB de RAM y un avanzado sistema de triple cámara de 50 MP, 12 MP y 5 MP con estabilización óptica. Su batería de 5000 mAh con carga superrápida, resistencia al agua IP68, funciones inteligentes de Galaxy AI y conectividad 5G lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con gran fluidez y rendimiento.",
+      "precio": 349990,
+      "stock": 8,
+      "estado": "disponible",
+      "imagen": "celulares/A57.avif",
+      "activo": true,
+      "marca": "Samsung"
+    },
+    {
+      "codigo": "samsung-s10",
+      "nombre": "Samsung Galaxy S10 +",
+      "descripcion": "Descubre la combinación perfecta de elegancia, potencia y tecnología con el Samsung Galaxy S10+. Cuenta con una impresionante pantalla Dynamic AMOLED de 6,4” con resolución Quad HD+, potente procesador Exynos 9820, 8 GB de RAM y un avanzado sistema de triple cámara de 12 MP, 12 MP y 16 MP, además de una doble cámara frontal de 10 MP y 8 MP. Su batería de 4100 mAh con carga rápida e inalámbrica, resistencia al agua IP68 y lector de huellas ultrasónico lo convierten en una excelente opción para disfrutar de fotografías, aplicaciones y entretenimiento diario.",
+      "precio": 279990,
+      "stock": 10,
+      "estado": "disponible",
+      "imagen": "celulares/10.png",
+      "activo": true,
+      "marca": "Samsung"
+    },
+    {
+      "codigo": "samsung-s20",
+      "nombre": "Samsung Galaxy S20",
+      "descripcion": "Descubre la combinación perfecta de elegancia, potencia e innovación con el Samsung Galaxy S20. Cuenta con una impresionante pantalla Dynamic AMOLED 2X de 6,2” a 120 Hz, potente procesador Exynos 990, 8 GB de RAM y un avanzado sistema de triple cámara de 12 MP, 64 MP y 12 MP con zoom de hasta 30 aumentos. Su batería de 4000 mAh con carga rápida de 25 W, carga inalámbrica, resistencia al agua IP68 y elegante diseño lo convierten en una excelente opción para disfrutar de fotografías, videojuegos y entretenimiento con gran fluidez y rendimiento.",
+      "precio": 324990,
+      "stock": 5,
+      "estado": "disponible",
+      "imagen": "celulares/20.png",
+      "activo": true,
+      "marca": "Samsung"
+    }
+  ]
+}

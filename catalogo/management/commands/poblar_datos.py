@@ -1,134 +1,95 @@
-
+import json
 import os
+import shutil
+from pathlib import Path
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 
-from catalogo.models import Marca, Celular, Perfil
+from catalogo.models import Celular, Marca, Perfil
 
 
 class Command(BaseCommand):
-
-    help = 'Carga marcas, celulares y usuarios de prueba'
+    help = 'Carga las marcas, los celulares y las cuentas de prueba'
 
     def handle(self, *args, **kwargs):
-
-        marcas = [
-            ('Samsung', 'Celulares Samsung'),
-            ('Apple', 'Celulares iPhone'),
-            ('Xiaomi', 'Celulares Xiaomi'),
-            ('Motorola', 'Celulares Motorola'),
-        ]
-
-        for nombre, descripcion in marcas:
-            Marca.objects.update_or_create(
-                nombre=nombre,
-                defaults={'descripcion': descripcion}
-            )
-
-        self.stdout.write('Marcas cargadas correctamente')
-
-        celulares = [
-            (
-                'samsung-a55', 'Samsung Galaxy A55',
-                'Samsung', 299990, 10
-            ),
-            (
-                'samsung-s24', 'Samsung Galaxy S24',
-                'Samsung', 799990, 6
-            ),
-            (
-                'iphone-13', 'iPhone 13',
-                'Apple', 449990, 8
-            ),
-            (
-                'iphone-15', 'iPhone 15',
-                'Apple', 699990, 5
-            ),
-            (
-                'redmi-note-13', 'Redmi Note 13',
-                'Xiaomi', 179990, 15
-            ),
-            (
-                'xiaomi-13t', 'Xiaomi 13T',
-                'Xiaomi', 399990, 7
-            ),
-            (
-                'moto-g84', 'Motorola Moto G84',
-                'Motorola', 199990, 12
-            ),
-            (
-                'motorola-edge-40', 'Motorola Edge 40',
-                'Motorola', 349990, 9
-            ),
-        ]
-
-        for codigo, nombre, marca_nombre, precio, stock in celulares:
-
-            marca = Marca.objects.get(nombre=marca_nombre)
-
-            Celular.objects.update_or_create(
-                codigo=codigo,
-                defaults={
-                    'nombre': nombre,
-                    'marca': marca,
-                    'descripcion': (
-                        'Celular ' + nombre +
-                        ' disponible en nuestra tienda.'
-                    ),
-                    'precio': precio,
-                    'stock': stock,
-                    'estado': 'disponible',
-                    'activo': True,
-                }
-            )
-
-        self.stdout.write('Celulares cargados correctamente')
-
-        password_admin = os.getenv('CELUMARKET_ADMIN_PASSWORD')
-        password_cliente = os.getenv('CELUMARKET_CLIENTE_PASSWORD')
+        password_admin = os.getenv('CELUMARKET_ADMIN_PASSWORD', '').strip()
+        password_cliente = os.getenv('CELUMARKET_CLIENTE_PASSWORD', '').strip()
 
         if not password_admin or not password_cliente:
             raise CommandError(
-                'Debes configurar las contraseñas '
-                'CELUMARKET_ADMIN_PASSWORD y '
+                'Configura CELUMARKET_ADMIN_PASSWORD y '
                 'CELUMARKET_CLIENTE_PASSWORD en .env'
             )
 
-        Usuario = get_user_model()
+        carpeta_datos = Path(__file__).resolve().parent.parent / 'data'
+        archivo = carpeta_datos / 'catalogo_inicial.json'
+        with archivo.open(encoding='utf-8') as entrada:
+            datos = json.load(entrada)
 
-        administrador, creado = Usuario.objects.get_or_create(
-            username='admin_demo'
-        )
+        with transaction.atomic():
+            marcas = {}
+            for elemento in datos['marcas']:
+                marca, _ = Marca.objects.get_or_create(
+                    nombre=elemento['nombre'],
+                    defaults={'descripcion': elemento['descripcion']}
+                )
+                marcas[marca.nombre] = marca
 
-        administrador.is_staff = True
-        administrador.is_superuser = True
-        administrador.is_active = True
-        administrador.set_password(password_admin)
-        administrador.save()
+            nuevos = 0
+            for elemento in datos['celulares']:
+                valores = {
+                    'nombre': elemento['nombre'],
+                    'descripcion': elemento['descripcion'],
+                    'marca': marcas[elemento['marca']],
+                    'precio': elemento['precio'],
+                    'stock': elemento['stock'],
+                    'estado': elemento['estado'],
+                    'imagen': elemento['imagen'],
+                    'activo': elemento['activo'],
+                }
+                _, creado = Celular.objects.get_or_create(
+                    codigo=elemento['codigo'], defaults=valores
+                )
+                if creado:
+                    nuevos += 1
 
-        Perfil.objects.update_or_create(
-            usuario=administrador,
-            defaults={'rol': 'administrador'}
-        )
+            Usuario = get_user_model()
+            usuarios = [
+                ('admin_demo', password_admin, True, 'administrador'),
+                ('cliente_demo', password_cliente, False, 'cliente'),
+            ]
+            for nombre, clave, administrador, rol in usuarios:
+                usuario, creado = Usuario.objects.get_or_create(
+                    username=nombre,
+                    defaults={
+                        'is_staff': administrador,
+                        'is_superuser': administrador,
+                        'is_active': True,
+                    }
+                )
+                if creado:
+                    usuario.set_password(clave)
+                    usuario.save(update_fields=['password'])
+                Perfil.objects.get_or_create(
+                    usuario=usuario, defaults={'rol': rol}
+                )
 
-        cliente, creado = Usuario.objects.get_or_create(
-            username='cliente_demo'
-        )
+        for elemento in datos['celulares']:
+            if not elemento['imagen']:
+                continue
+            origen = carpeta_datos / 'imagenes' / elemento['imagen']
+            destino = Path(settings.MEDIA_ROOT) / elemento['imagen']
+            if not origen.is_file():
+                raise CommandError(f'Falta la imagen de ejemplo: {origen}')
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            if not destino.exists():
+                shutil.copy2(origen, destino)
 
-        cliente.is_staff = False
-        cliente.is_superuser = False
-        cliente.is_active = True
-        cliente.set_password(password_cliente)
-        cliente.save()
-
-        Perfil.objects.update_or_create(
-            usuario=cliente,
-            defaults={'rol': 'cliente'}
-        )
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                'Datos de CeluMarket cargados correctamente'
-            )
-        )
+        self.stdout.write(self.style.SUCCESS(
+            f'Carga terminada: {len(marcas)} marcas, '
+            f'{nuevos} celulares nuevos, 2 cuentas de prueba verificadas.'
+        ))
+        self.stdout.write('Los registros existentes no se modificaron.')
