@@ -1,11 +1,9 @@
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import (
-    UserCreationForm,
-    AuthenticationForm
-)
-from .models import Perfil
 from django import forms
-from .models import Celular
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.utils.safestring import mark_safe
+
+from .models import Celular, Perfil
 
 class CelularForm(forms.ModelForm):
 
@@ -123,15 +121,35 @@ class CelularForm(forms.ModelForm):
         return stock
 
 class RegistroForm(UserCreationForm):
+    username = forms.CharField(
+        label='Nombre de usuario',
+        help_text='Máximo 150 caracteres. Solo letras, números y @/./+/-/_ .',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
     rut = forms.CharField(
         max_length=15,
-        label='RUT'
+        label='RUT',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
-    telefono = forms.CharField(
-        max_length=20,
-        label='Teléfono'
+    password1 = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        help_text=mark_safe("""
+            <ul class="mb-0">
+                <li>Tu contraseña no puede parecerse demasiado a tus datos personales.</li>
+                <li>Tu contraseña debe tener al menos 8 caracteres.</li>
+                <li>Tu contraseña no puede ser una contraseña muy común.</li>
+                <li>Tu contraseña no puede ser completamente numérica.</li>
+            </ul>
+        """)
+    )
+
+    password2 = forms.CharField(
+        label='Confirmar contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        help_text='Escribe la misma contraseña para verificarla.'
     )
 
     class Meta:
@@ -139,25 +157,15 @@ class RegistroForm(UserCreationForm):
         fields = [
             'username',
             'rut',
-            'telefono',
             'password1',
             'password2',
         ]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for campo in self.fields.values():
-            campo.widget.attrs['class'] = 'form-control'
-
     def clean_rut(self):
-
         rut = self.cleaned_data['rut'].strip().upper()
 
         if Perfil.objects.filter(rut__iexact=rut).exists():
-            raise forms.ValidationError(
-                'Este RUT ya está registrado.'
-            )
+            raise forms.ValidationError('Este RUT ya está registrado.')
 
         return rut
 
@@ -181,29 +189,17 @@ class PerfilForm(forms.ModelForm):
 
     class Meta:
         model = Perfil
-
-        fields = [
-            'rut',
-            'telefono',
-        ]
+        fields = ['rut']
 
         labels = {
             'rut': 'RUT',
-            'telefono': 'Teléfono',
         }
 
         widgets = {
-            'rut': forms.TextInput(
-                attrs={'class': 'form-control'}
-            ),
-
-            'telefono': forms.TextInput(
-                attrs={'class': 'form-control'}
-            ),
+            'rut': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
     def clean_rut(self):
-
         rut = self.cleaned_data['rut'].strip().upper()
 
         if rut:

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, F
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -80,6 +80,29 @@ def catalogo(request):
         request,
         'catalogo/catalogo.html',
         contexto
+    )
+def inicio(request):
+    marcas = Marca.objects.all().order_by('nombre')
+    marcas_con_imagen = []
+
+    for marca in marcas:
+        celulares = Celular.objects.filter(
+            marca=marca,
+            activo=True
+        )
+        celular = celulares.exclude(
+            imagen=''
+        ).exclude(imagen__isnull=True).first() or celulares.first()
+
+        marcas_con_imagen.append({
+            'marca': marca,
+            'celular': celular,
+        })
+
+    return render(
+        request,
+        'catalogo/inicio.html',
+        {'marcas_con_imagen': marcas_con_imagen}
     )
 
 def detalle_celular(request, codigo):
@@ -367,47 +390,52 @@ def finalizar_carrito(request):
     resumen = resumen_carrito(request)
 
     if not resumen['items']:
-        messages.error(
-            request,
-            'Tu carrito está vacío.'
-        )
+        messages.error(request, 'Tu carrito está vacío.')
         return redirect('catalogo:carrito')
 
     if resumen['problemas']:
-        messages.error(
-            request,
-            'Revisa los productos antes de continuar.'
-        )
+        messages.error(request, 'Revisa los productos antes de continuar.')
         return redirect('catalogo:carrito')
 
-    comprobante = {
-        'fecha': timezone.localtime().strftime(
-            '%d/%m/%Y %H:%M'
-        ),
-        'productos': [],
-        'subtotal': resumen['subtotal_formateado'],
-        'iva': resumen['iva_formateado'],
-        'total': resumen['total_formateado'],
-    }
+    with transaction.atomic():
 
-    for item in resumen['items']:
+        for item in resumen['items']:
+            celular = item['celular']
+            actualizados = Celular.objects.filter(
+                pk=celular.pk,
+                activo=True,
+                estado='disponible',
+                stock__gte=item['cantidad']
+            ).update(stock=F('stock') - item['cantidad'])
 
-        comprobante['productos'].append({
-            'nombre': item['celular'].nombre,
-            'cantidad': item['cantidad'],
-            'precio': item['celular'].precio_formateado,
-            'importe': item['importe_formateado'],
-        })
+            if actualizados != 1:
+                transaction.set_rollback(True)
+                messages.error(
+                    request,
+                    f'No hay suficiente stock para {celular.nombre}.'
+                )
+                return redirect('catalogo:carrito')
 
-    request.session['ultimo_comprobante'] = comprobante
+        comprobante = {
+            'fecha': timezone.localtime().strftime('%d/%m/%Y %H:%M'),
+            'productos': [],
+            'subtotal': resumen['subtotal_formateado'],
+            'iva': resumen['iva_formateado'],
+            'total': resumen['total_formateado'],
+        }
 
-    request.session['carrito'] = {}
+        for item in resumen['items']:
+            comprobante['productos'].append({
+                'nombre': item['celular'].nombre,
+                'cantidad': item['cantidad'],
+                'precio': item['celular'].precio_formateado,
+                'importe': item['importe_formateado'],
+            })
 
-    messages.success(
-        request,
-        'Solicitud simulada generada correctamente.'
-    )
+        request.session['ultimo_comprobante'] = comprobante
+        request.session['carrito'] = {}
 
+    messages.success(request, 'Compra simulada realizada correctamente.')
     return redirect('catalogo:comprobante')
 
 def ver_comprobante(request):
@@ -447,9 +475,8 @@ def registrar_usuario(request):
                 Perfil.objects.create(
                     usuario=usuario,
                     rut=form.cleaned_data['rut'],
-                    telefono=form.cleaned_data['telefono'],
                     rol='cliente'
-                )
+)
 
             login(request, usuario)
 

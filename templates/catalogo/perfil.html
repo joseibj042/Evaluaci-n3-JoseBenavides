@@ -38,16 +38,6 @@ Mi perfil
 
                 </div>
 
-                <div class="mb-3">
-
-                    <strong>Teléfono</strong>
-
-                    <p class="text-muted">
-                        {{ perfil.telefono|default:"No registrado" }}
-                    </p>
-
-                </div>
-
                 <div class="mb-4">
 
                     <strong>Tipo de cuenta</strong>
@@ -79,7 +69,7 @@ Mi perfil
                 </a>
 
                 <a
-                    href="{% url 'catalogo:inicio' %}"
+                    href="{% url 'catalogo:catalogo' %}"
                     class="btn btn-outline-secondary">
 
                     Volver al catálogo

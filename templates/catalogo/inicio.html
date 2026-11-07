@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Inicio
+{% endblock %}
+
+{% block contenido %}
+
+<div class="text-center mb-5">
+    <p class="text-primary fw-semibold text-uppercase small mb-2">
+        Bienvenido
+    </p>
+
+    <h1 class="page-title mb-3">
+        Encuentra tu próximo celular
+    </h1>
+
+    <p class="page-description">
+        Explora nuestras marcas y entra al catálogo
+        según la marca que prefieras.
+    </p>
+
+    <a href="{% url 'catalogo:catalogo' %}" class="btn btn-primary mt-3">
+        Ver todo el catálogo
+    </a>
+</div>
+
+<div class="row g-4">
+
+    {% for item in marcas_con_imagen %}
+    <div class="col-12 col-sm-6 col-lg-4">
+        <a href="{% url 'catalogo:catalogo' %}?marca={{ item.marca.id }}"
+           class="text-decoration-none text-dark">
+
+            <div class="card h-100 catalog-card">
+
+                {% if item.celular and item.celular.imagen %}
+                    <img
+                        src="{{ item.celular.imagen.url }}"
+                        alt="{{ item.marca.nombre }}"
+                        class="card-img-top p-3 product-photo">
+                {% else %}
+                    <div class="photo-placeholder d-flex align-items-center justify-content-center">
+                        <span class="text-muted">Sin imagen</span>
+                    </div>
+                {% endif %}
+
+                <div class="card-body text-center">
+                    <h2 class="h4 mb-2">{{ item.marca.nombre }}</h2>
+                    <p class="text-muted mb-0">
+                        Ver celulares {{ item.marca.nombre }}
+                    </p>
+                </div>
+
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

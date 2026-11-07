@@ -76,7 +76,7 @@ class PruebasCeluMarket(TestCase):
     def test_catalogo(self):
 
         respuesta = self.client.get(
-            reverse('catalogo:inicio')
+            reverse('catalogo:catalogo')
         )
 
         self.assertEqual(respuesta.status_code, 200)
@@ -91,7 +91,7 @@ class PruebasCeluMarket(TestCase):
         self.celular.save()
 
         respuesta = self.client.get(
-            reverse('catalogo:inicio')
+            reverse('catalogo:catalogo')
         )
 
         self.assertNotContains(
@@ -109,7 +109,7 @@ class PruebasCeluMarket(TestCase):
             with self.subTest(busqueda=texto):
 
                 respuesta = self.client.get(
-                    reverse('catalogo:inicio'),
+                    reverse('catalogo:catalogo'),
                     {'buscar': texto}
                 )
 
@@ -120,7 +120,7 @@ class PruebasCeluMarket(TestCase):
     def test_filtro_marca(self):
 
         respuesta = self.client.get(
-            reverse('catalogo:inicio'),
+            reverse('catalogo:catalogo'),
             {'marca': self.marca.id}
         )
 
@@ -148,11 +148,11 @@ class PruebasCeluMarket(TestCase):
             )
 
         pagina1 = self.client.get(
-            reverse('catalogo:inicio')
+            reverse('catalogo:catalogo')
         )
 
         pagina2 = self.client.get(
-            reverse('catalogo:inicio'),
+            reverse('catalogo:catalogo'),
             {'page': 2}
         )
 
@@ -380,7 +380,7 @@ class PruebasCeluMarket(TestCase):
         )
 
         self.celular.refresh_from_db()
-        self.assertEqual(self.celular.stock, 5)
+        self.assertEqual(self.celular.stock, 4)
 
     def test_registro_usuario(self):
 
@@ -389,7 +389,6 @@ class PruebasCeluMarket(TestCase):
             {
                 'username': 'nuevo_cliente',
                 'rut': 'TEST-001',
-                'telefono': '900000000',
                 'password1': 'ClaveSegura2026!',
                 'password2': 'ClaveSegura2026!',
             }
@@ -403,6 +402,7 @@ class PruebasCeluMarket(TestCase):
 
         self.assertEqual(perfil.rol, 'cliente')
         self.assertFalse(perfil.usuario.is_staff)
+        self.assertEqual(perfil.telefono, '')
 
     def test_editar_perfil(self):
 
@@ -412,7 +412,6 @@ class PruebasCeluMarket(TestCase):
             reverse('catalogo:editar_perfil'),
             {
                 'rut': 'TEST-002',
-                'telefono': '911111111'
             }
         )
 
@@ -422,10 +421,8 @@ class PruebasCeluMarket(TestCase):
             usuario=self.cliente
         )
 
-        self.assertEqual(
-            perfil.telefono,
-            '911111111'
-        )
+        self.assertEqual(perfil.rut, 'TEST-002')
+        self.assertEqual(perfil.telefono, '')
 
     def test_login_logout(self):
 
@@ -454,3 +451,82 @@ class PruebasCeluMarket(TestCase):
             '_auth_user_id',
             self.client.session
         )
+
+    def test_inicio_presenta_marcas(self):
+        respuesta = self.client.get(reverse('catalogo:inicio'))
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, 'Samsung')
+        self.assertContains(respuesta, 'Apple')
+        self.assertContains(
+            respuesta,
+            f"{reverse('catalogo:catalogo')}?marca={self.marca.id}"
+        )
+
+    def test_pagina_catalogo_por_marca(self):
+        respuesta = self.client.get(
+            reverse('catalogo:catalogo'),
+            {'marca': self.otra_marca.pk}
+        )
+        self.assertContains(respuesta, 'iPhone de prueba')
+        self.assertNotContains(respuesta, 'Samsung de prueba')
+
+    def test_registro_y_perfil_sin_telefono(self):
+        respuesta = self.client.get(reverse('catalogo:registro'))
+        self.assertNotContains(respuesta, 'Teléfono')
+        self.client.force_login(self.cliente)
+        respuesta = self.client.get(reverse('catalogo:perfil'))
+        self.assertNotContains(respuesta, 'Teléfono')
+        respuesta = self.client.get(reverse('catalogo:editar_perfil'))
+        self.assertNotContains(respuesta, 'Teléfono')
+
+    def test_stock_por_cantidad_y_sin_repetir_comprobante(self):
+        self.client.post(
+            reverse('catalogo:agregar_carrito', args=[self.celular.pk]),
+            {'cantidad': 3}
+        )
+        self.client.post(reverse('catalogo:finalizar_carrito'))
+        self.celular.refresh_from_db()
+        self.assertEqual(self.celular.stock, 2)
+        self.client.post(reverse('catalogo:finalizar_carrito'))
+        self.celular.refresh_from_db()
+        self.assertEqual(self.celular.stock, 2)
+
+    def test_stock_insuficiente_no_descontar_otros(self):
+        self.client.post(
+            reverse('catalogo:agregar_carrito', args=[self.celular.pk]),
+            {'cantidad': 2}
+        )
+        self.client.post(
+            reverse('catalogo:agregar_carrito', args=[self.otro_celular.pk]),
+            {'cantidad': 2}
+        )
+        self.otro_celular.stock = 1
+        self.otro_celular.save(update_fields=['stock'])
+        self.client.post(reverse('catalogo:finalizar_carrito'))
+        self.celular.refresh_from_db()
+        self.otro_celular.refresh_from_db()
+        self.assertEqual(self.celular.stock, 5)
+        self.assertEqual(self.otro_celular.stock, 1)
+        self.assertNotEqual(self.client.session.get('carrito'), {})
+
+    def test_registro_mensajes_django_en_espanol(self):
+        respuesta = self.client.get(reverse('catalogo:registro'))
+        self.assertContains(respuesta, 'Nombre de usuario')
+        self.assertContains(respuesta, 'Confirmar contraseña')
+
+    def test_compra_varios_celulares_descontando_cantidades(self):
+        self.client.post(
+            reverse('catalogo:agregar_carrito', args=[self.celular.pk]),
+            {'cantidad': 2}
+        )
+        self.client.post(
+            reverse('catalogo:agregar_carrito', args=[self.otro_celular.pk]),
+            {'cantidad': 3}
+        )
+        respuesta = self.client.post(reverse('catalogo:finalizar_carrito'))
+        self.assertEqual(respuesta.status_code, 302)
+        self.celular.refresh_from_db()
+        self.otro_celular.refresh_from_db()
+        self.assertEqual(self.celular.stock, 3)
+        self.assertEqual(self.otro_celular.stock, 0)
+        self.assertEqual(len(self.client.session['ultimo_comprobante']['productos']), 2)
