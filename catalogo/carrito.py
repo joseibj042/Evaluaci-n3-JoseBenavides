@@ -3,7 +3,6 @@ from .models import Celular
 def formato_pesos(valor):
     return f"{valor:,}".replace(",", ".")
 
-
 def resumen_carrito(request):
 
     carrito = request.session.get('carrito', {})

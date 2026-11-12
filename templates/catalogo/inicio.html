@@ -1,62 +1,50 @@
 {% extends 'base.html' %}
-
-{% block titulo %}
-Inicio
-{% endblock %}
-
+{% block titulo %}Inicio{% endblock %}
 {% block contenido %}
-
-<div class="text-center mb-5">
-    <p class="text-primary fw-semibold text-uppercase small mb-2">
-        Bienvenido
-    </p>
-
-    <h1 class="page-title mb-3">
-        Encuentra tu próximo celular
-    </h1>
-
-    <p class="page-description">
-        Explora nuestras marcas y entra al catálogo
-        según la marca que prefieras.
-    </p>
-
-    <a href="{% url 'catalogo:catalogo' %}" class="btn btn-primary mt-3">
-        Ver todo el catálogo
-    </a>
-</div>
-
-<div class="row g-4">
-
-    {% for item in marcas_con_imagen %}
-    <div class="col-12 col-sm-6 col-lg-4">
-        <a href="{% url 'catalogo:catalogo' %}?marca={{ item.marca.id }}"
-           class="text-decoration-none text-dark">
-
-            <div class="card h-100 catalog-card">
-
-                {% if item.celular and item.celular.imagen %}
-                    <img
-                        src="{{ item.celular.imagen.url }}"
-                        alt="{{ item.marca.nombre }}"
-                        class="card-img-top p-3 product-photo">
-                {% else %}
-                    <div class="photo-placeholder d-flex align-items-center justify-content-center">
-                        <span class="text-muted">Sin imagen</span>
-                    </div>
-                {% endif %}
-
-                <div class="card-body text-center">
-                    <h2 class="h4 mb-2">{{ item.marca.nombre }}</h2>
-                    <p class="text-muted mb-0">
-                        Ver celulares {{ item.marca.nombre }}
-                    </p>
-                </div>
-
-            </div>
-        </a>
+<section class="home-hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+        <span class="eyebrow hero-eyebrow"><span class="eyebrow-dot"></span> TU PRÓXIMO CELULAR ESTÁ AQUÍ</span>
+        <h1 id="hero-title">Tecnología que va <em>contigo.</em></h1>
+        <p>Descubre celulares de distintas marcas, compara sus precios y encuentra el modelo que se adapta a ti.</p>
+        <div class="hero-actions">
+            <a href="{% url 'catalogo:catalogo' %}" class="btn btn-light btn-lg hero-primary">Explorar celulares <svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></a>
+            <a href="#marcas" class="hero-link">Ver marcas <svg class="icon icon-sm"><use href="#ico-chevron"></use></svg></a>
+        </div>
+        <div class="hero-meta"><span><svg class="icon icon-sm"><use href="#ico-check-circle"></use></svg>{{ marcas_con_imagen|length }} marcas para explorar</span><span><svg class="icon icon-sm"><use href="#ico-check-circle"></use></svg>Catálogo actualizado</span></div>
     </div>
-    {% endfor %}
+    <div class="hero-art" aria-hidden="true">
+        <div class="hero-orbit hero-orbit-a"></div><div class="hero-orbit hero-orbit-b"></div>
+        <div class="hero-product-frame">
+            {% if destacado and destacado.imagen %}<img src="{{ destacado.imagen.url }}" alt="" class="hero-phone" loading="eager">{% else %}<svg class="icon hero-phone-fallback"><use href="#ico-phone"></use></svg>{% endif %}
+        </div>
+        {% if destacado %}<div class="hero-floating-card"><span class="floating-marker"></span><span>Selección del catálogo <strong>{{ destacado.nombre }}</strong></span></div>{% endif %}
+    </div>
+</section>
 
-</div>
+<section class="benefits-strip" aria-label="Cómo funciona Tienda de Celulares">
+    <div class="benefit"><span class="benefit-icon"><svg class="icon"><use href="#ico-grid"></use></svg></span><div><strong>Explora por marca</strong><small>Encuentra tus favoritos fácilmente</small></div></div>
+    <div class="benefit"><span class="benefit-icon"><svg class="icon"><use href="#ico-search"></use></svg></span><div><strong>Compara opciones</strong><small>Consulta precios y disponibilidad</small></div></div>
+    <div class="benefit"><span class="benefit-icon"><svg class="icon"><use href="#ico-shield"></use></svg></span><div><strong>Compra de prueba</strong><small>Sin pagos ni compras reales</small></div></div>
+</section>
 
+<section id="marcas" class="home-section" aria-labelledby="marcas-titulo">
+    <div class="section-heading"><div><span class="eyebrow">EXPLORA A TU MANERA</span><h2 id="marcas-titulo">Encuentra tu marca favorita</h2><p>Elige una marca para descubrir sus modelos disponibles.</p></div><a class="text-link" href="{% url 'catalogo:catalogo' %}">Ver todo el catálogo <svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></a></div>
+    <div class="row g-3 g-lg-4 brand-grid">
+        {% for item in marcas_con_imagen %}
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'catalogo:catalogo' %}?marca={{ item.marca.id }}" class="brand-card" aria-label="Ver celulares {{ item.marca.nombre }}">
+                <div class="brand-visual">
+                    {% if item.celular and item.celular.imagen %}<img src="{{ item.celular.imagen.url }}" alt="Modelo de {{ item.marca.nombre }}" loading="lazy">
+                    {% else %}<svg class="icon brand-placeholder"><use href="#ico-phone"></use></svg>{% endif %}
+                    <span class="brand-go"><svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></span>
+                </div>
+                <div class="brand-card-bottom"><span><strong>{{ item.marca.nombre }}</strong><small>{{ item.total }} modelo{{ item.total|pluralize }} en catálogo</small></span><svg class="icon icon-sm"><use href="#ico-chevron"></use></svg></div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12"><div class="empty-state"><svg class="icon empty-icon"><use href="#ico-grid"></use></svg><h3>Aún no hay marcas</h3><p>El catálogo estará disponible una vez que se agreguen los productos.</p></div></div>
+        {% endfor %}
+    </div>
+</section>
+<section class="home-cta"><div><span class="eyebrow">¿LISTO PARA ELEGIR?</span><h2>Todos los modelos, en un solo lugar.</h2><p>Utiliza el buscador y los filtros para encontrar justo lo que necesitas.</p></div><a class="btn btn-primary btn-lg" href="{% url 'catalogo:catalogo' %}">Ir al catálogo <svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></a></section>
 {% endblock %}

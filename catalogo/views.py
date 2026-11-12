@@ -17,7 +17,6 @@ from .forms import CelularForm
 
 from .models import Celular, Marca
 
-
 def catalogo(request):
 
     busqueda = request.GET.get('buscar', '').strip()
@@ -97,12 +96,18 @@ def inicio(request):
         marcas_con_imagen.append({
             'marca': marca,
             'celular': celular,
+            'total': celulares.count(),
         })
+
+    destacado = next(
+        (item['celular'] for item in marcas_con_imagen if item['celular'] and item['celular'].imagen),
+        None,
+    )
 
     return render(
         request,
         'catalogo/inicio.html',
-        {'marcas_con_imagen': marcas_con_imagen}
+        {'marcas_con_imagen': marcas_con_imagen, 'destacado': destacado}
     )
 
 def detalle_celular(request, codigo):

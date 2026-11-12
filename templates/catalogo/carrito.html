@@ -1,231 +1,28 @@
 {% extends 'base.html' %}
-
-{% block titulo %}
-Mi carrito
-{% endblock %}
-
+{% block titulo %}Mi carrito{% endblock %}
 {% block contenido %}
-
-<div class="mb-4">
-
-    <h1 class="page-title">
-        Mi carrito de compras
-    </h1>
-
-    <p class="page-description">
-        Revisa tus productos antes de generar
-        el comprobante simulado.
-    </p>
-
-</div>
-
-{% if problemas %}
-<div class="alert alert-warning">
-    <strong>Revisa tu carrito:</strong>
-    <ul class="mb-0">
-        {% for problema in problemas %}
-        <li>{{ problema }}</li>
-        {% endfor %}
-    </ul>
-</div>
-{% endif %}
-
+<div class="breadcrumbs"><a href="{% url 'catalogo:inicio' %}">Inicio</a><svg class="icon icon-xs"><use href="#ico-chevron"></use></svg><span>Mi carrito</span></div>
+<div class="page-heading"><div><span class="eyebrow">TU SELECCIÓN</span><h1>Mi carrito de compras</h1><p>Revisa las cantidades y el total antes de generar el comprobante simulado.</p></div><span class="page-count-pill"><svg class="icon icon-sm"><use href="#ico-bag"></use></svg>{{ cantidad_carrito|default:0 }} producto{{ cantidad_carrito|default:0|pluralize }}</span></div>
+{% if problemas %}<div class="alert alert-warning app-alert" role="alert"><svg class="icon"><use href="#ico-info"></use></svg><div><strong>Hay productos que necesitan tu atención:</strong><ul class="mb-0 mt-1">{% for problema in problemas %}<li>{{ problema }}</li>{% endfor %}</ul></div></div>{% endif %}
 {% if items %}
-
-<div class="table-responsive">
-    <div class="table-responsive bg-white rounded-4 shadow-sm p-2">
-
-    </div>
-
-    <table class="table table-bordered align-middle">
-
-        <thead class="table-dark">
-            <tr>
-                <th>Celular</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
+<div class="row g-4 align-items-start">
+    <div class="col-12 col-lg-8">
+        <div class="cart-list">
             {% for item in items %}
-
-            <tr>
-
-                <td>
-                    <div class="d-flex align-items-center gap-3">
-
-                        {% if item.celular.imagen %}
-
-                        <img
-                            src="{{ item.celular.imagen.url }}"
-                            alt="{{ item.celular.nombre }}"
-                            style="width:65px; height:65px;
-                                   object-fit:contain;">
-
-                        {% endif %}
-
-                        <span>
-                            {{ item.celular.nombre }}
-                        </span>
-
-                    </div>
-                </td>
-
-                <td>
-                    ${{ item.celular.precio_formateado }}
-                </td>
-
-                <td>
-
-                    <form method="POST"
-                          action="{% url 'catalogo:actualizar_carrito' item.celular.id %}"
-                          class="d-flex gap-2 align-items-center">
-
-                        {% csrf_token %}
-
-                        <input
-                            type="number"
-                            name="cantidad"
-                            value="{{ item.cantidad }}"
-                            min="1"
-                            max="{{ item.celular.stock }}"
-                            class="form-control"
-                            style="width:85px;"
-                            required>
-
-                        <button type="submit"
-                                class="btn btn-sm btn-primary">
-
-                            Actualizar
-
-                        </button>
-
-                    </form>
-
-                </td>
-
-                <td>
-                    ${{ item.importe_formateado }}
-                </td>
-
-                <td>
-
-                    <form method="POST"
-                          action="{% url 'catalogo:eliminar_carrito' item.celular.id %}">
-
-                        {% csrf_token %}
-
-                        <button type="submit"
-                                class="btn btn-sm btn-outline-danger">
-
-                            Eliminar
-
-                        </button>
-
-                    </form>
-
-                </td>
-
-            </tr>
-
+            <article class="cart-item">
+                <a href="{% url 'catalogo:detalle' item.celular.codigo %}" class="cart-item-image">{% if item.celular.imagen %}<img src="{{ item.celular.imagen.url }}" alt="{{ item.celular.nombre }}">{% else %}<svg class="icon"><use href="#ico-phone"></use></svg>{% endif %}</a>
+                <div class="cart-item-main"><span class="product-brand">{{ item.celular.marca.nombre }}</span><h2><a href="{% url 'catalogo:detalle' item.celular.codigo %}">{{ item.celular.nombre }}</a></h2><span class="cart-unit-price">${{ item.celular.precio_formateado }} c/u</span>
+                    <div class="cart-item-controls"><form method="post" action="{% url 'catalogo:actualizar_carrito' item.celular.id %}" class="cart-quantity-form">{% csrf_token %}<label for="cantidad-{{ item.celular.id }}" class="visually-hidden">Cantidad de {{ item.celular.nombre }}</label><input id="cantidad-{{ item.celular.id }}" class="form-control" type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.celular.stock }}" required><button class="btn btn-outline-primary btn-sm" type="submit">Actualizar</button></form><form method="post" action="{% url 'catalogo:eliminar_carrito' item.celular.id %}">{% csrf_token %}<button class="cart-remove" type="submit" aria-label="Eliminar {{ item.celular.nombre }}"><svg class="icon icon-sm"><use href="#ico-trash"></use></svg> Eliminar</button></form></div>
+                </div>
+                <div class="cart-item-total"><small>Total</small><strong>${{ item.importe_formateado }}</strong></div>
+            </article>
             {% endfor %}
-
-        </tbody>
-
-    </table>
-
-</div>
-
-<div class="row justify-content-end mt-4">
-
-    <div class="col-12 col-md-5">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body">
-
-                <h2 class="h5 mb-3">
-                    Resumen del carrito
-                </h2>
-
-                <div class="d-flex justify-content-between">
-                    <span>Subtotal sin IVA</span>
-                    <span>${{ subtotal_formateado }}</span>
-                </div>
-
-                <div class="d-flex justify-content-between mt-2">
-                    <span>IVA incluido (19%)</span>
-                    <span>${{ iva_formateado }}</span>
-                </div>
-
-                <hr>
-
-                <div class="d-flex justify-content-between">
-                    <strong>Total final</strong>
-                    <strong>${{ total_formateado }}</strong>
-                </div>
-
-                <p class="small text-muted mt-3">
-                    Los precios incluyen IVA.
-                    Esta es una compra simulada.
-                </p>
-
-                <form method="POST"
-                      action="{% url 'catalogo:finalizar_carrito' %}"
-                      class="mt-3">
-
-                    {% csrf_token %}
-
-                    <button type="submit"
-                            class="btn btn-success w-100"
-                            {% if problemas %}disabled{% endif %}>
-
-                        Generar comprobante simulado
-
-                    </button>
-
-                </form>
-
-            </div>
-
         </div>
-
+        <div class="cart-secondary-actions"><a class="back-link" href="{% url 'catalogo:catalogo' %}"><svg class="icon icon-sm"><use href="#ico-back"></use></svg> Seguir explorando</a><form method="post" action="{% url 'catalogo:vaciar_carrito' %}">{% csrf_token %}<button class="cart-remove" type="submit"><svg class="icon icon-sm"><use href="#ico-trash"></use></svg> Vaciar carrito</button></form></div>
     </div>
-
+    <div class="col-12 col-lg-4"><aside class="cart-summary"><h2>Resumen de tu carrito</h2><div class="summary-line"><span>Subtotal sin IVA</span><strong>${{ subtotal_formateado }}</strong></div><div class="summary-line"><span>IVA incluido (19%)</span><strong>${{ iva_formateado }}</strong></div><div class="summary-total"><span>Total final</span><strong>${{ total_formateado }}</strong></div><form method="post" action="{% url 'catalogo:finalizar_carrito' %}">{% csrf_token %}<button type="submit" class="btn btn-primary btn-lg w-100" {% if problemas %}disabled{% endif %}>Generar comprobante <svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></button></form><div class="summary-notice"><svg class="icon icon-sm"><use href="#ico-lock"></use></svg><span>Simulación académica. No ingresarás datos de pago ni realizarás cobros reales.</span></div></aside></div>
 </div>
-
-<form method="POST"
-      action="{% url 'catalogo:vaciar_carrito' %}"
-      class="mt-4">
-
-    {% csrf_token %}
-
-    <button type="submit"
-            class="btn btn-outline-danger">
-
-        Vaciar carrito
-
-    </button>
-
-</form>
-
 {% else %}
-
-<div class="alert alert-info">
-    Tu carrito está vacío.
-</div>
-
+<div class="empty-state empty-cart"><span class="empty-icon-circle"><svg class="icon"><use href="#ico-bag"></use></svg></span><h2>Tu carrito está vacío</h2><p>Descubre nuestros modelos y agrega los celulares que quieras comparar o seleccionar.</p><a class="btn btn-primary btn-lg" href="{% url 'catalogo:catalogo' %}">Explorar catálogo <svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></a></div>
 {% endif %}
-
-<a href="{% url 'catalogo:catalogo' %}"
-   class="btn btn-outline-secondary mt-4">
-
-    Seguir viendo celulares
-
-</a>
-
 {% endblock %}

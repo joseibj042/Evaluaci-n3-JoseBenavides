@@ -1,8 +1,8 @@
 from django.contrib import admin
 from .models import Marca, Celular, Perfil
 
-admin.site.site_header = 'CeluMarket - Panel de Control'
-admin.site.site_title = 'CeluMarket Admin'
+admin.site.site_header = 'Tienda de Celulares - Panel de Control'
+admin.site.site_title = 'Tienda de Celulares Admin'
 admin.site.index_title = 'Gestión de Celulares'
 
 @admin.register(Marca)

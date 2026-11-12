@@ -10,18 +10,17 @@ from django.db import transaction
 
 from catalogo.models import Celular, Marca, Perfil
 
-
 class Command(BaseCommand):
     help = 'Carga las marcas, los celulares y las cuentas de prueba'
 
     def handle(self, *args, **kwargs):
-        password_admin = os.getenv('CELUMARKET_ADMIN_PASSWORD', '').strip()
-        password_cliente = os.getenv('CELUMARKET_CLIENTE_PASSWORD', '').strip()
+        password_admin = os.getenv('TIENDA_ADMIN_PASSWORD', '').strip()
+        password_cliente = os.getenv('TIENDA_CLIENTE_PASSWORD', '').strip()
 
         if not password_admin or not password_cliente:
             raise CommandError(
-                'Configura CELUMARKET_ADMIN_PASSWORD y '
-                'CELUMARKET_CLIENTE_PASSWORD en .env'
+                'Configura TIENDA_ADMIN_PASSWORD y '
+                'TIENDA_CLIENTE_PASSWORD en .env'
             )
 
         carpeta_datos = Path(__file__).resolve().parent.parent / 'data'

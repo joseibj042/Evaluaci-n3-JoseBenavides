@@ -1,308 +1,40 @@
-
 {% extends 'base.html' %}
-
-{% block titulo %}
-Catalogo
-{% endblock %}
-
+{% block titulo %}Catálogo de celulares{% endblock %}
 {% block contenido %}
+<div class="breadcrumbs"><a href="{% url 'catalogo:inicio' %}">Inicio</a><svg class="icon icon-xs"><use href="#ico-chevron"></use></svg><span>Catálogo</span></div>
+<div class="page-heading catalog-heading"><div><span class="eyebrow">CATÁLOGO TIENDA</span><h1>Explora nuestros celulares</h1><p>Filtra por marca, busca un modelo o compara precios para elegir fácilmente.</p></div><div class="heading-emblem"><svg class="icon"><use href="#ico-phone"></use></svg></div></div>
 
-
-<div class="mb-4">
-
-    <p class="text-primary fw-semibold
-              text-uppercase small mb-2">
-        Tu tienda de tecnología
-    </p>
-
-    <h1 class="page-title mb-2">
-        Encuentra tu próximo celular
-    </h1>
-
-    <p class="page-description mb-0">
-        Explora nuestras marcas y compara
-        los modelos disponibles.
-    </p>
-
-</div>
-
-<form method="GET"
-      class="card filter-panel p-4 mb-4">
-
-    <div class="row g-3">
-
-        <div class="col-md-4">
-
-            <label class="form-label">
-                Buscar celular
-            </label>
-
-            <input
-                type="text"
-                name="buscar"
-                class="form-control"
-                placeholder="Ej: Samsung, iPhone..."
-                value="{{ busqueda }}">
-
-        </div>
-
-        <div class="col-md-4">
-
-            <label class="form-label">
-                Marca
-            </label>
-
-            <select name="marca" class="form-select">
-
-                <option value="">
-                    Todas las marcas
-                </option>
-
-                {% for marca in marcas %}
-
-                <option
-                    value="{{ marca.id }}"
-                    {% if marca_actual == marca.id %}
-                    selected
-                    {% endif %}>
-
-                    {{ marca.nombre }}
-
-                </option>
-
-                {% endfor %}
-
-            </select>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <label class="form-label">
-                Ordenar por
-            </label>
-
-            <select name="orden" class="form-select">
-
-                <option value="nombre"
-                    {% if orden_actual == 'nombre' %}
-                    selected
-                    {% endif %}>
-                    Nombre
-                </option>
-
-                <option value="precio_asc"
-                    {% if orden_actual == 'precio_asc' %}
-                    selected
-                    {% endif %}>
-                    Menor precio
-                </option>
-
-                <option value="precio_desc"
-                    {% if orden_actual == 'precio_desc' %}
-                    selected
-                    {% endif %}>
-                    Mayor precio
-                </option>
-
-            </select>
-
-        </div>
-
+<form class="filter-panel card" method="get" action="{% url 'catalogo:catalogo' %}" aria-label="Filtros del catálogo">
+    <div class="filter-panel-heading"><span class="filter-heading-icon"><svg class="icon icon-sm"><use href="#ico-sliders"></use></svg></span><strong>Encuentra lo que buscas</strong></div>
+    <div class="row g-3 align-items-end">
+        <div class="col-12 col-lg-5"><label for="buscar" class="form-label">Buscar celular</label><div class="field-with-icon"><svg class="icon icon-sm"><use href="#ico-search"></use></svg><input id="buscar" class="form-control" name="buscar" value="{{ busqueda }}" placeholder="Nombre, código o característica..." autocomplete="off"></div></div>
+        <div class="col-6 col-lg-3"><label for="marca" class="form-label">Marca</label><select id="marca" class="form-select" name="marca"><option value="">Todas las marcas</option>{% for marca in marcas %}<option value="{{ marca.id }}" {% if marca_actual == marca.id %}selected{% endif %}>{{ marca.nombre }}</option>{% endfor %}</select></div>
+        <div class="col-6 col-lg-2"><label for="orden" class="form-label">Ordenar por</label><select id="orden" class="form-select" name="orden"><option value="nombre" {% if orden_actual == 'nombre' %}selected{% endif %}>Nombre</option><option value="precio_asc" {% if orden_actual == 'precio_asc' %}selected{% endif %}>Menor precio</option><option value="precio_desc" {% if orden_actual == 'precio_desc' %}selected{% endif %}>Mayor precio</option></select></div>
+        <div class="col-12 col-lg-2"><button class="btn btn-primary w-100 filter-submit" type="submit">Aplicar filtros <svg class="icon icon-sm"><use href="#ico-arrow"></use></svg></button></div>
     </div>
-
-    <div class="mt-3 d-flex gap-2 flex-wrap">
-
-        <button type="submit" class="btn btn-primary">
-            Buscar
-        </button>
-
-        <a href="{% url 'catalogo:catalogo' %}" class="btn btn-outline-secondary">
-            Limpiar filtros
-            </a>
-
-    </div>
-
+    {% if busqueda or marca_actual or orden_actual != 'nombre' %}<a class="clear-filters" href="{% url 'catalogo:catalogo' %}">Limpiar todos los filtros</a>{% endif %}
 </form>
 
-<p class="text-muted">
-    {{ page_obj.paginator.count }}
-    celulares encontrados
-</p>
-
-<div class="row g-4">
-
+<div class="catalog-toolbar"><div><strong>{{ page_obj.paginator.count }}</strong> celular{{ page_obj.paginator.count|pluralize }} encontrado{{ page_obj.paginator.count|pluralize }}{% if busqueda %}<span class="filter-description"> para “{{ busqueda }}”</span>{% endif %}</div><span class="toolbar-view"><svg class="icon icon-sm"><use href="#ico-grid"></use></svg> Vista de productos</span></div>
+<div class="row g-3 g-lg-4 product-grid">
     {% for celular in celulares %}
-
-    <div class="col-12 col-sm-6 col-lg-4">
-
-        <div class="card h-100 catalog-card">
-
-            {% if celular.imagen %}
-
-            <img
-            src="{{ celular.imagen.url }}"
-            class="card-img-top p-3 product-photo"
-            alt="{{ celular.nombre }}">
-
-            {% else %}
-
-            <div class="bg-light d-flex
-                        align-items-center
-                        justify-content-center"
-                 style="height:220px;">
-
-                <span class="text-muted">
-                    Sin imagen
-                </span>
-
+    <div class="col-12 col-sm-6 col-xl-4">
+        <article class="product-card">
+            <a class="product-media" href="{% url 'catalogo:detalle' celular.codigo %}" aria-label="Ver {{ celular.nombre }}">
+                <span class="product-media-brand">{{ celular.marca.nombre }}</span>
+                {% if celular.disponible %}<span class="availability-badge in-stock"><span class="status-dot"></span>Disponible</span>{% else %}<span class="availability-badge out-stock">Agotado</span>{% endif %}
+                {% if celular.imagen %}<img src="{{ celular.imagen.url }}" alt="{{ celular.nombre }}" loading="lazy">{% else %}<span class="product-placeholder"><svg class="icon"><use href="#ico-phone"></use></svg>Sin imagen</span>{% endif %}
+            </a>
+            <div class="product-body"><p class="product-brand">{{ celular.marca.nombre }}</p><h2><a href="{% url 'catalogo:detalle' celular.codigo %}">{{ celular.nombre }}</a></h2><p class="product-desc">{{ celular.descripcion|truncatechars:88 }}</p><div class="product-price-row"><div><small>Precio</small><strong>${{ celular.precio_formateado }}</strong></div>{% if celular.disponible %}<span class="stock-small">{{ celular.stock }} en stock</span>{% endif %}</div>
+                <div class="product-actions"><a class="btn btn-outline-primary" href="{% url 'catalogo:detalle' celular.codigo %}">Ver detalles</a>{% if celular.disponible %}<form action="{% url 'catalogo:agregar_carrito' celular.id %}" method="post">{% csrf_token %}<input type="hidden" name="cantidad" value="1"><button type="submit" class="btn btn-primary" aria-label="Agregar {{ celular.nombre }} al carrito"><svg class="icon icon-sm"><use href="#ico-bag"></use></svg><span>Agregar</span></button></form>{% else %}<button type="button" class="btn btn-secondary" disabled>No disponible</button>{% endif %}</div>
             </div>
-
-            {% endif %}
-
-            <div class="card-body d-flex flex-column">
-
-                <p class="text-muted mb-1">
-                    {{ celular.marca.nombre }}
-                </p>
-
-                <h2 class="h5 card-title">
-                    {{ celular.nombre }}
-                </h2>
-
-                <p class="card-text">
-                    {{ celular.descripcion|truncatechars:100 }}
-                </p>
-
-                <h3 class="price-tag">
-                    ${{ celular.precio_formateado }}
-                    </h3>
-
-                {% if celular.disponible %}
-
-                <p class="text-success">
-                    Disponible:
-                    {{ celular.stock }} unidades
-                </p>
-
-                {% else %}
-
-                <p class="text-danger">
-                    No disponible
-                </p>
-
-                {% endif %}
-
-                <a
-                    href="{% url 'catalogo:detalle' celular.codigo %}"
-                    class="btn btn-primary mt-auto">
-
-                    Ver detalles
-
-                </a>
-
-                {% if celular.disponible %}
-    
-                <form method="POST"
-                action="{% url 'catalogo:agregar_carrito' celular.id %}"
-                class="mt-2">
-
-                {% csrf_token %}
-
-                <input type="hidden"
-                name="cantidad"
-                value="1">
-
-                <button type="submit"
-                class="btn btn-success w-100">
-
-                Agregar al carrito
-
-                </button>
-
-                </form>
-    
-                {% else %}
-        
-                <button class="btn btn-secondary mt-2" disabled>
-                
-                    No disponible
-        
-                    </button>
-
-                    {% endif %}
-
-            </div>
-
-        </div>
-
+        </article>
     </div>
-
     {% empty %}
-
-    <div class="col-12">
-
-        <div class="alert alert-info">
-            No se encontraron celulares.
-        </div>
-
-    </div>
-
+    <div class="col-12"><div class="empty-state"><span class="empty-icon-circle"><svg class="icon"><use href="#ico-search"></use></svg></span><h2>No encontramos resultados</h2><p>Prueba con otro nombre o revisa los filtros que seleccionaste.</p><a class="btn btn-primary" href="{% url 'catalogo:catalogo' %}">Ver todos los celulares</a></div></div>
     {% endfor %}
-
 </div>
-
 {% if page_obj.has_other_pages %}
-
-<nav class="mt-4" aria-label="Paginas del catalogo">
-
-    <ul class="pagination justify-content-center flex-wrap">
-
-        {% if page_obj.has_previous %}
-
-        <li class="page-item">
-
-            <a class="page-link"
-               href="?buscar={{ busqueda|urlencode }}&amp;marca={{ marca_actual|default_if_none:'' }}&amp;orden={{ orden_actual }}&amp;page={{ page_obj.previous_page_number }}">
-
-                Anterior
-
-            </a>
-
-        </li>
-
-        {% endif %}
-
-        <li class="page-item disabled">
-
-            <span class="page-link">
-
-                Pagina {{ page_obj.number }}
-                de {{ page_obj.paginator.num_pages }}
-
-            </span>
-
-        </li>
-
-        {% if page_obj.has_next %}
-
-        <li class="page-item">
-
-            <a class="page-link"
-               href="?buscar={{ busqueda|urlencode }}&amp;marca={{ marca_actual|default_if_none:'' }}&amp;orden={{ orden_actual }}&amp;page={{ page_obj.next_page_number }}">
-
-                Siguiente
-
-            </a>
-
-        </li>
-
-        {% endif %}
-
-    </ul>
-
-</nav>
-
+<nav class="pagination-wrapper" aria-label="Páginas de productos"><ul class="pagination"><li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">{% if page_obj.has_previous %}<a class="page-link" href="?buscar={{ busqueda|urlencode }}&amp;marca={{ marca_actual|default_if_none:'' }}&amp;orden={{ orden_actual }}&amp;page={{ page_obj.previous_page_number }}">Anterior</a>{% else %}<span class="page-link">Anterior</span>{% endif %}</li><li class="page-item disabled"><span class="page-link page-current">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li><li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">{% if page_obj.has_next %}<a class="page-link" href="?buscar={{ busqueda|urlencode }}&amp;marca={{ marca_actual|default_if_none:'' }}&amp;orden={{ orden_actual }}&amp;page={{ page_obj.next_page_number }}">Siguiente</a>{% else %}<span class="page-link">Siguiente</span>{% endif %}</li></ul></nav>
 {% endif %}
-
 {% endblock %}

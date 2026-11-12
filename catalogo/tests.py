@@ -1,7 +1,5 @@
 from django.test import TestCase
 
-# Create your tests here.
-
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -9,8 +7,7 @@ from django.contrib.auth.models import User
 from .models import Marca, Celular, Perfil
 from .forms import CelularForm
 
-
-class PruebasCeluMarket(TestCase):
+class PruebasTienda(TestCase):
 
     def setUp(self):
 
