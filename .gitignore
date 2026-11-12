@@ -6,3 +6,14 @@ db.sqlite3
 *.sqlite3
 media/
 staticfiles/
+.env.*
+!.env.example
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.log
+.pytest_cache/
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
